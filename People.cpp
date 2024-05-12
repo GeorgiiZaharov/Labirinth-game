@@ -19,12 +19,13 @@ void People::set_position(const sf::FloatRect& new_pos)
 }
 
 void People::set_animation(const Animation& idle_animation, const Animation& walking_animation,
-        const Animation& blood_spatter_animation, const Animation& dead_animation)
+        const Animation& blood_spatter_animation, const Animation& dead_animation, const Animation& presentation_animation)
 {
     idle_anim = idle_animation;
     walking_anim = walking_animation;
     blood_spatter_anim = blood_spatter_animation;
     dead_anim = dead_animation;
+    presentation_anim = presentation_animation;
 }
 
 void People::draw(sf::RenderWindow& window, __int64_t cur_time)
@@ -93,7 +94,7 @@ void People::aim(float x, float y)
 
 void People::moving(__int64_t cur_time, float move_dx, float move_dy)
 {
-
+    presentation_anim.start_animation(cur_time);
     // пермещаем патроны  
     gun.move_bullets(cur_time);
     if (alive())
@@ -153,6 +154,11 @@ bool People::check_collision(Bullet& bullet, __int64_t cur_time)
         } 
     }
     return false;
+}
+
+void People::upgrade_gun(__int64_t cur_time)
+{
+    gun.upgrade(cur_time);
 }
 
 bool People::alive(void) const
@@ -241,6 +247,22 @@ void People::change_spread(float delta_spread)
     gun.change_spread(delta_spread);
 }
 
+sf::Sprite People::get_presentation_sprite(__int64_t cur_time)
+{
+    return presentation_anim.get_sprite(cur_time);
+}
+
+sf::Sprite People::get_gun_presentation_sprite(__int64_t cur_time)
+{
+    return gun.get_presentation_sprite(cur_time);
+}
+
+
+void People::start_presentation_animation(__int64_t cur_time)
+{
+    presentation_anim.start_animation(cur_time);
+    gun.start_presentation_animation(cur_time);
+}
 
 sf::FloatRect People::get_hitbox(void) const
 {

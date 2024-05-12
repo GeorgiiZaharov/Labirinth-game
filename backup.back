@@ -117,7 +117,9 @@ private:
 	            case sf::Keyboard::Space:
 	            	make_board_boom();
 	            	break;
-	            default: 
+	            // отслеживаем нажатие кнопки мыши
+	            case sf::
+	            default:
 	            	break;
 	    		}
 	    		break;
@@ -275,7 +277,7 @@ private:
 		sf::Vector2i mousePos = sf::Mouse::getPosition(window);
         sf::Vector2f globalMousePos = window.mapPixelToCoords(mousePos);
 
-		if (is_person_info_panel(globalMousePos))	// если мышь наведена на персонажа
+		if (is_person_info_panel())	// если мышь наведена на персонажа
 		{
 			show_person_info_panel();// выводим информацию о персонаже
 		}

@@ -77,7 +77,6 @@ void Gun::shoot(__int64_t cur_time, bool is_running)
             magazine[magazine_size - bullets_in_gun] = Bullet(bullet_sprite, bullet_rect, new_dx, new_dy, speed_bullet, cur_time);
             bullets_in_gun -= 1;
             last_shoot_time = cur_time;
-
         }
         fire_anim.start_animation(cur_time);
     }
@@ -128,16 +127,90 @@ void Gun::draw(sf::RenderWindow& window, __int64_t cur_time)
     window.draw(to_draw);
 }
 
-void Gun::set_animation(const Animation& fire_anim, const Animation& recharge_anim)
+void Gun::upgrade(__int64_t cur_time)
+{
+    if (bullets_in_gun == 0 && cur_time - last_shoot_time >= recharge_time && magazine_cnt != 0)
+    {
+        bullets_in_gun = magazine_size;
+        --magazine_cnt;
+    }
+}
+
+void Gun::set_animation(const Animation& fire_anim, const Animation& recharge_anim, const Animation& presentation_anim)
 {
     // Устанавливает анимацию для выстрела пушки.
     // Этот метод обновляет анимацию выстрела пушки.
     this->fire_anim = fire_anim;
     this->recharge_anim = recharge_anim;
+    this->presentation_anim = presentation_anim;
+
 }
+
+void Gun::start_presentation_animation(__int64_t cur_time)
+{
+    presentation_anim.start_animation(cur_time);
+}
+
+sf::Sprite Gun::get_presentation_sprite(__int64_t cur_time)
+{
+    return presentation_anim.get_sprite(cur_time);
+}
+
 
 std::pair<std::vector<Bullet>::iterator, std::vector<Bullet>::iterator> Gun::get_bullets(void)
 {
     return std::make_pair(magazine.begin(), magazine.begin() + magazine_size - bullets_in_gun);    
+}
+
+std::pair<std::size_t, std::size_t> Gun::get_magazine_info(void) const 
+{
+    return std::make_pair(bullets_in_gun, magazine_size);
+}
+
+// Возвращает текущую информацию о пушке. (количество оставшихся магазинов)
+std::size_t Gun::get_gun_info(void) const 
+{
+    return magazine_cnt;
+}
+
+// Возращает угол разброса в градусах
+float Gun::get_spread(void) const 
+{
+    return spread;
+}
+
+// Возращает урон оружия персонажа
+int Gun::get_damage(void) const 
+{
+    return damage;
+}
+
+void Gun::change_damage(int delta_damage) 
+{
+    damage += delta_damage;
+}
+
+// Возращает время перезарядки в м/с
+std::size_t Gun::get_recharge_time(void) const 
+{
+    return static_cast<std::size_t>(recharge_time);
+}
+
+// Изменяет максимальное количество патронов
+void Gun::change_magazine_size(std::size_t delta_size) 
+{
+    magazine_size += delta_size;
+}
+
+// Изменяет скорость перезарядки
+void Gun::change_recharge_time(__int64_t delta_time) 
+{
+    recharge_time = std::max(static_cast<__int64_t>(0), recharge_time + delta_time);
+}
+
+// Изменяет разброс
+void Gun::change_spread(float delta_spread) 
+{
+    spread = std::max(0.0f, spread + delta_spread);
 }
 

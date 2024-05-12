@@ -39,43 +39,52 @@ public:
     // Рисует пушку и пули на окне.
     void draw(sf::RenderWindow& window, __int64_t cur_time);
 
+    // Обновляет патроны в пушке при перезарядке
+    void upgrade(__int64_t cur_time);
+
+
     /*
      * ===================================================
      * Геттеры/сеттеры
      * ===================================================
      */
     // Возвращает текущую информацию о магазине. (текущее количество патронов, максимальное)
-    std::pair<std::size_t, std::size_t> get_magazine_info(void) const {return std::make_pair(bullets_in_gun, magazine_size);}
+    std::pair<std::size_t, std::size_t> get_magazine_info(void) const;
 
     // Возвращает текущую информацию о пушке. (количество оставшихся магазинов)
-    std::size_t get_gun_info(void) const {return magazine_cnt;}
+    std::size_t get_gun_info(void) const;
 
     // Возращает угол разброса в градусах
-    float get_spread(void) const {return spread;}
+    float get_spread(void) const;
 
     // Возращает урон оружия персонажа
-    int get_damage(void) const {return damage;}
+    int get_damage(void) const;
 
-    void change_damage(int delta_damage) {damage += delta_damage;}
+    void change_damage(int delta_damage);
 
     // Возращает время перезарядки в м/с
-    std::size_t get_recharge_time(void) const {return static_cast<std::size_t>(recharge_time);}
+    std::size_t get_recharge_time(void) const;
     
     // Возращает вектор ссылок на текущее состояние magazine
     std::pair<std::vector<Bullet>::iterator, std::vector<Bullet>::iterator> get_bullets(void);
 
     // Изменяет максимальное количество патронов
-    void change_magazine_size(std::size_t delta_size) {magazine_size += delta_size;}
+    void change_magazine_size(std::size_t delta_size);
 
     // Изменяет скорость перезарядки
-    void change_recharge_time(__int64_t delta_time) {recharge_time = std::max(static_cast<__int64_t>(0), recharge_time + delta_time);}
+    void change_recharge_time(__int64_t delta_time);
 
     // Изменяет разброс
-    void change_spread(float delta_spread) {spread = std::max(0.0f, spread + delta_spread);}
+    void change_spread(float delta_spread);
 
+    // Начинает анимацию презентации
+    void start_presentation_animation(__int64_t cur_time);
+
+    // Возращает следующий спрайт анимации презентации персонажа
+    sf::Sprite get_presentation_sprite(__int64_t cur_time);
 protected:
     // Устанавливает анимацию для выстрела пушки.
-    void set_animation(const Animation& fire_anim, const Animation& recharge_anim);
+    void set_animation(const Animation& fire_anim, const Animation& recharge_anim, const Animation& presentation_anim);
 
     // Загружает необходимы ресурсы, которые нелязя просто копировать
     void load_data(void);
@@ -92,7 +101,7 @@ private:
     std::vector<Bullet> magazine;
     float poz_x, poz_y, r, dx, dy, spread;
     int damage;
-    Animation fire_anim, recharge_anim;
+    Animation fire_anim, recharge_anim, presentation_anim;
 };
 
 #endif // GUN_HPP

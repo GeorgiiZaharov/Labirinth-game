@@ -10,14 +10,15 @@ distance(distances[num_model]) // дальность обнаружения dist
 		Animation(textures[num_model][0], 100, 100, 1, 0, true),
 		Animation(textures[num_model][1], 100, 100, 2, 500, false),
 		Animation(textures[num_model][2], 100, 100 / 2, 1, 1000, false),
-		Animation(textures[num_model][3], 100, 100, 1, 0, true)
+		Animation(textures[num_model][3], 100, 100, 1, 0, true),
+		Animation(textures[num_model][4], 250, 250, 2, 500, false)
 	);
 }
 
 bool Enemy::loadResources(void)
 {
 	textures.resize(1);
-	sf::Texture tex1, tex2, tex3, tex4;
+	sf::Texture tex1, tex2, tex3, tex4, tex5;
 	bool success = true;
 
 	if (!tex1.loadFromFile("hero.png"))
@@ -32,7 +33,10 @@ bool Enemy::loadResources(void)
 	if (!tex4.loadFromFile("dead.png"))
 		success = false;
 
-	textures[0] = std::vector<sf::Texture>({tex1, tex2, tex3, tex4});
+	if (!tex5.loadFromFile("enemy_presentation.png"))
+		success = false;
+
+	textures[0] = std::vector<sf::Texture>({tex1, tex2, tex3, tex4, tex5});
 	distances.push_back(5); // для num_model = 0 обнаружение 5 клеток
 	return success;
 }

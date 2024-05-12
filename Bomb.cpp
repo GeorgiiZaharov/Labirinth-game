@@ -4,7 +4,7 @@
 Bomb::Bomb(int w, int h)
     : activate(false),
       w(w), h(h),
-      planting_time(5000), // 5 секунд время установки
+      planting_time(2000), // 2 секунд время установки
       start_plant_time(0), 
       plant_duration(0),
       last_bomb_pos(-100, -100) // изначальная координата бомбы
@@ -45,6 +45,7 @@ void Bomb::drop_planting(void)
     if (!activate)
     {
         last_bomb_pos = sf::Vector2f(-100, -100);
+        plant_duration = 0;
     }
 }
 

@@ -22,7 +22,7 @@ public:
     static bool loadResources(void);
 
 private:
-    static sf::Texture gun_tex, bullet_tex, fire_anim_tex, recharge_anim_tex;
+    static sf::Texture gun_tex, bullet_tex, fire_anim_tex, recharge_anim_tex, presentation_tex;
     static sf::Sound shoot_sound, recharge_sound;
     static sf::SoundBuffer shoot_sound_buffer, recharge_sound_buffer;
 };

@@ -38,6 +38,9 @@ public:
     // Проверяет столкновение пули с персонажем
     bool check_collision(Bullet& bullet, __int64_t cur_time);
 
+    // Обновляет состояние оружия (тк кл-во патронов обновляется только при стерльбе)
+    void upgrade_gun(__int64_t cur_time);
+
     // возращает ответ на вопрос: жив ли персоаж?
     bool alive(void) const;
 
@@ -103,9 +106,19 @@ public:
     // Изменяет разброс
     void change_spread(float delta_spread);
 
+    // Возращает следующий спрайт анимации презентации
+    sf::Sprite get_presentation_sprite(__int64_t cur_time);
+    
+    // Возращает следующий спрайт анимации презентации оружия
+    sf::Sprite get_gun_presentation_sprite(__int64_t cur_time);
+
+    // Запускает анимацию презентации
+    void start_presentation_animation(__int64_t cur_time);
+
+
 protected:
     void set_animation(const Animation& idle_animation, const Animation& walking_animation,
-        const Animation& blood_spatter_animation, const Animation& dead_animation);
+        const Animation& blood_spatter_animation, const Animation& dead_animation, const Animation& presentation_animation);
 
     // Загрузка данных для спрайта
     void load_data(void);
@@ -118,7 +131,7 @@ protected:
     HealthBar health_bar;
     sf::FloatRect hitbox;
     __int64_t last_time;
-    Animation idle_anim, walking_anim, blood_spatter_anim, dead_anim;
+    Animation idle_anim, walking_anim, blood_spatter_anim, dead_anim, presentation_anim;
     bool is_walking;
     sf::Vector2f bullet_contact_vec;
 };

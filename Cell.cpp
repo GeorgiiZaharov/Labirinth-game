@@ -13,7 +13,7 @@ is_left(true)
 		cell_h
 	);
 	pruning(rec, bg_tex, pos);
-	boom_anim = Animation(boom_tex, cell_w, cell_h, 1, 200, false);
+	boom_anim = Animation(boom_tex, cell_h, cell_w, 1, 200, false);
 
 	pos = sf::FloatRect(x,
 		y, 
@@ -59,6 +59,7 @@ void Cell::make_boom(__int64_t cur_time)
 
 void Cell::draw(sf::RenderWindow& window, __int64_t cur_time)
 {
+	window.draw(rec);
 	if (boom_anim.is_running())
 	{
 		// получаем спрайт
@@ -68,10 +69,6 @@ void Cell::draw(sf::RenderWindow& window, __int64_t cur_time)
 		tmp.setPosition(rec_pos.left + rec_pos.width / 2, rec_pos.top + rec_pos.height / 2);
 		// выводим
 		window.draw(tmp);
-	}
-	else
-	{
-		window.draw(rec);
 	}
 	if (is_up) 		window.draw(line_up);
 	if (is_right) 	window.draw(line_right);
