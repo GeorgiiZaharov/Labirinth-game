@@ -3,7 +3,8 @@
 Enemy::Enemy(std::size_t num_model)
 :People(100, 100),
 saw_the_player(false),
-distance(distances[num_model]) // дальность обнаружения distance клеток
+distance(distances[num_model]), // дальность обнаружения distance клеток
+cost(costs[num_model])			// цена за убийство cost монет
 {
 	// устанавливаем анимацию
 	People::set_animation(
@@ -17,27 +18,51 @@ distance(distances[num_model]) // дальность обнаружения dist
 
 bool Enemy::loadResources(void)
 {
+	// для первой модели врага
 	textures.resize(1);
 	sf::Texture tex1, tex2, tex3, tex4, tex5;
 	bool success = true;
 
-	if (!tex1.loadFromFile("hero.png"))
+	if (!tex1.loadFromFile("src/enemy1.png"))
 		success = false;
 
-	if (!tex2.loadFromFile("walking_anim.png"))
+	if (!tex2.loadFromFile("src/enemy1_walking.png"))
 		success = false;
 
-	if (!tex3.loadFromFile("blood_spatter_anim.png"))
+	if (!tex3.loadFromFile("src/blood_spatter.png"))
 		success = false;
 
-	if (!tex4.loadFromFile("dead.png"))
+	if (!tex4.loadFromFile("src/dead.png"))
 		success = false;
 
-	if (!tex5.loadFromFile("enemy_presentation.png"))
+	if (!tex5.loadFromFile("src/enemy1_presentation.png"))
 		success = false;
 
 	textures[0] = std::vector<sf::Texture>({tex1, tex2, tex3, tex4, tex5});
 	distances.push_back(5); // для num_model = 0 обнаружение 5 клеток
+	costs.push_back(2); // для num_model = 0 цена 2 монеты
+
+	// для второй модели врага
+	textures.resize(2);
+	if (!tex1.loadFromFile("src/enemy2.png"))
+		success = false;
+
+	if (!tex2.loadFromFile("src/enemy2_walking.png"))
+		success = false;
+
+	if (!tex3.loadFromFile("src/blood_spatter.png"))
+		success = false;
+
+	if (!tex4.loadFromFile("src/dead.png"))
+		success = false;
+
+	if (!tex5.loadFromFile("src/enemy2_presentation.png"))
+		success = false;
+
+	textures[1] = std::vector<sf::Texture>({tex1, tex2, tex3, tex4, tex5});
+	distances.push_back(3); // для num_model = 1 обнаружение 3 клеток
+	costs.push_back(3); // для num_model = 1 цена 3 монеты
+
 	return success;
 }
 
@@ -163,5 +188,16 @@ bool Enemy::is_open_pozition(void)
 	return false;
 }
 
+int Enemy::get_cost(void) const
+{
+	return cost;
+}
+
+int Enemy::get_distance(void) const
+{
+	return distance;
+}
+
 std::vector<std::vector<sf::Texture>> Enemy::textures;
 std::vector<int> Enemy::distances;
+std::vector<int> Enemy::costs;

@@ -1,13 +1,11 @@
 #ifndef BOARD_HPP
 #define BOARD_HPP
 
+#include "includes.hpp"
+
 #include "Cell.hpp"
 #include "Bullet.hpp"
-#include <iostream>
-#include <map>
-#include <set>
-#include <vector>
-#include <queue>
+
 
 class Board
 {

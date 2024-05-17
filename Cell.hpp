@@ -1,7 +1,8 @@
 #ifndef CELL_HPP
 #define CELL_HPP
 
-#include <SFML/Graphics.hpp>
+#include "includes.hpp"
+
 #include "Animation.hpp"
 
 class Board;
@@ -37,6 +38,8 @@ private:
     sf::Sprite rec, line_up, line_right, line_down, line_left;
     Animation boom_anim;
     static sf::Texture boom_tex;
+    static sf::SoundBuffer boom_buf;
+    static sf::Sound boom_sound;
 };
 
 #endif

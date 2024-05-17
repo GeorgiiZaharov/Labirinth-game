@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+actor User as U
+rectangle "Управление персонажем" {
+  usecase "Управление главным героем" as UC1
+  usecase "Использование бомб" as UC6
+}
+
+rectangle "Игровой процесс" {
+  usecase "Изменение лабиринта" as UC10
+  usecase "Перемещение персонажа" as UC3
+  usecase "Убийство врагов" as UC4
+}
+
+rectangle "Игровой интерфейс" {
+  usecase "Покупка улучшений" as UC5
+  usecase "Просмотр характеристик персонажей" as UC7
+  usecase "Управление игровым интерфейсом" as UC8
+  usecase "Выход из игры" as UC9
+}
+
+U --> UC1
+UC1 --> UC3
+UC1 --> UC4
+UC6 --> UC4
+UC6 --> UC10
+U --> UC5
+U --> UC6
+U --> UC7
+U --> UC8
+U --> UC9
+@enduml

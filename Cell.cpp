@@ -1,4 +1,4 @@
-	#include "Cell.hpp"
+#include "Cell.hpp"
 
 Cell::Cell(const sf::Texture& bg_tex, const sf::Texture& border_tex, float x, float y, float cell_w, float cell_h, float border_width)
 :is_up(true),
@@ -13,7 +13,7 @@ is_left(true)
 		cell_h
 	);
 	pruning(rec, bg_tex, pos);
-	boom_anim = Animation(boom_tex, cell_h, cell_w, 1, 200, false);
+	boom_anim = Animation(boom_tex, boom_sound, cell_h, cell_w, 3, 100, false);
 
 	pos = sf::FloatRect(x,
 		y, 
@@ -47,9 +47,15 @@ is_left(true)
 
 bool Cell::loadResources(void)
 {
-	if (!boom_tex.loadFromFile("boom_cell.png"))
-		return false;
-	return true;
+	bool success = true;
+	if (!boom_tex.loadFromFile("src/boom_cell.png"))
+		success = false;
+
+	if (!boom_buf.loadFromFile("src/boom.wav"))
+		success = false;
+
+	boom_sound.setBuffer(boom_buf);		// устанавливаем буфер для звука
+	return success;
 } 
 
 void Cell::make_boom(__int64_t cur_time)
@@ -98,3 +104,5 @@ void Cell::pruning(sf::Sprite& sprite, const sf::Texture& tex, const sf::FloatRe
     sprite.setPosition(pos.left, pos.top);
 }
 sf::Texture Cell::boom_tex;
+sf::SoundBuffer Cell::boom_buf;
+sf::Sound Cell::boom_sound;

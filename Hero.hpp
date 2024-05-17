@@ -1,8 +1,8 @@
 #ifndef HERO_HPP
 #define HERO_HPP
 
-#include <SFML/Graphics.hpp>
-#include <vector>
+#include "includes.hpp"
+
 #include "People.hpp"
 #include "Gun.hpp"
 #include "Bomb.hpp"
@@ -35,6 +35,9 @@ public:
     void drop_planting(void);
     // взрывает все установленные бомбы и возращает их позиции
     std::vector<sf::Vector2f> boom(void);
+
+    // убивает hero делает cur_health = 0
+    void suicide(void);
     /*
     * ===================================================
     * Геттеры/сеттеры
@@ -45,6 +48,33 @@ public:
 
     // возращает значение cash
     int get_cash(void) const;
+
+    /*
+    *  Запросы на изменение / установку
+    */
+    // устанавливает текущее здоровье равное максимально доступному (max_health)
+    void update_cur_health(void);
+
+    // изменяет максимальное здоровье
+    void change_max_health(int delta_health);
+
+    // // устанавливает максимальное здоровье
+    // void set_max_health(int new_max_health);
+
+    // изменяет урон
+    void change_damage(int delta_damage); 
+
+    // устанавливает скорость персонажа
+    void change_speed(int delta_speed);
+
+    // Добавляет рожок с патронами
+    void add_magazine(void);
+
+    // Изменяет скорость перезарядки
+    void change_recharge_time(__int64_t delta_time);
+
+    // Изменяет разброс
+    void change_spread(float delta_spread);
 
 private:
     sf::RectangleShape plantBar;

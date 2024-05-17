@@ -1,7 +1,8 @@
 #ifndef BOMB_HPP
 #define BOMB_HPP
 
-#include <SFML/Graphics.hpp>
+#include "includes.hpp"
+
 #include "Animation.hpp"
 
 class Bomb

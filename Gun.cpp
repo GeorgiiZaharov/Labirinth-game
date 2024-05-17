@@ -43,11 +43,6 @@ void Gun::rotate(float x, float y, float direct_x, float direct_y)
     poz_y = y + dy * (r + gun_rect.height / 2);
 }
 
-void Gun::new_magazine(void)
-{
-    magazine_cnt += 1;
-}
-
 void Gun::shoot(__int64_t cur_time, bool is_running)
 {
     // Логика выстрела пули, если возможно, на основе текущего времени и состояния игры.
@@ -60,12 +55,14 @@ void Gun::shoot(__int64_t cur_time, bool is_running)
             bullet_width,
             bullet_height
         };
+        // для прицельной стрельбы
         if (!is_running)
         {
             magazine[magazine_size - bullets_in_gun] = Bullet(bullet_sprite, bullet_rect, dx, dy, speed_bullet, cur_time);
             bullets_in_gun -= 1;
             last_shoot_time = cur_time;
         }
+        // для стрельбы в движении
         else
         {
             std::random_device rd; // Источник энтропии для инициализации
@@ -196,21 +193,21 @@ std::size_t Gun::get_recharge_time(void) const
     return static_cast<std::size_t>(recharge_time);
 }
 
-// Изменяет максимальное количество патронов
-void Gun::change_magazine_size(std::size_t delta_size) 
+// Добавляет рожок с патронами
+void Gun::add_magazine(void) 
 {
-    magazine_size += delta_size;
+    ++magazine_cnt;
 }
 
-// Изменяет скорость перезарядки
+// Изменяет скорость перезарядки но не менее чем пол секунды
 void Gun::change_recharge_time(__int64_t delta_time) 
 {
-    recharge_time = std::max(static_cast<__int64_t>(0), recharge_time + delta_time);
+    recharge_time = std::max(static_cast<__int64_t>(500), recharge_time + delta_time);
 }
 
-// Изменяет разброс
+// Изменяет разброс но не менее 5 градусов
 void Gun::change_spread(float delta_spread) 
 {
-    spread = std::max(0.0f, spread + delta_spread);
+    spread = std::max(5.0f, spread + delta_spread);
 }
 

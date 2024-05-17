@@ -23,9 +23,9 @@ void Bomb::planting(const sf::FloatRect& pos_obj, __int64_t cur_time)
     { // если они равны (бомба не передвигалась)
         if (cur_time - start_plant_time >= planting_time)
         {
-            activate = true; // устанавливаем бомбу
-            wait_anim.start_animation(cur_time);
-            plant_duration = 0;
+            activate = true;                        // устанавливаем бомбу
+            wait_anim.start_animation(cur_time);    // запускаем анимацию
+            plant_duration = 0;                     // начинаем показывать спрайты с начала
         }
         else
         {
@@ -51,7 +51,7 @@ void Bomb::drop_planting(void)
 
 bool Bomb::loadResources(void)
 {       
-    if (!wait_tex.loadFromFile("bomb.png"))
+    if (!wait_tex.loadFromFile("src/bomb.png"))
         return false;
     return true;
 }
@@ -89,4 +89,4 @@ int Bomb::get_damage(void)
 }
 
 sf::Texture Bomb::wait_tex;
-int Bomb::damage = 75;
+int Bomb::damage = 95;

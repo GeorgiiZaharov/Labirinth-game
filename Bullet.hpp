@@ -4,7 +4,7 @@
 #ifndef BULLET_HPP
 #define BULLET_HPP
 
-#include <SFML/Graphics.hpp>
+#include "includes.hpp"
 
 class Bullet
 {

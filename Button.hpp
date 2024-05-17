@@ -1,9 +1,7 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <cmath>
+#include "includes.hpp"
 
 class Button
 {
@@ -24,6 +22,7 @@ public:
 	void try_to_press(const sf::Vector2f& mousePos);
 	// возращает флаг и затирает его
 	bool is_pressed(void);
+	// загружает ресурсы
 	static bool loadResources(void);
 	void draw(sf::RenderWindow& window, const sf::Vector2f& mousePos);
 	/*

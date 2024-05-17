@@ -24,6 +24,7 @@ Animation::Animation(sf::Texture& tex, float h, float w, std::size_t n, __int64_
       num_sprites(n),
       cur_sprite_num(0),
       time_for_change(time_for_change),
+      last_time(0),
       running(false),
       is_looped(is_looped),
       with_sound(false)
@@ -66,6 +67,7 @@ void Animation::start_animation(__int64_t cur_time)
     {
         sound.play();
     }
+    
     running = true;
 }
 
@@ -90,11 +92,16 @@ bool Animation::is_running(void) const
 }
 
 // Возвращает текущий спрайт на основе прошедшего времени с момента последнего изменения спрайта
+// !!! ВНИМАНИЕ! Возращает спрайт с Origin по центру!!!
 sf::Sprite Animation::get_sprite(__int64_t cur_time)
 {
     if (cur_time - last_time >= time_for_change) {
+
         cur_sprite_num = (cur_sprite_num + 1) % num_sprites;
-        if (cur_sprite_num == 0) running = false;
+        if (cur_sprite_num == 0) 
+        {
+            running = false;
+        }
         last_time = cur_time;
     }
     return sprites[cur_sprite_num];

@@ -1,11 +1,7 @@
 #ifndef ANIMATION_HPP
 #define ANIMATION_HPP
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <string>
-#include <vector>
-#include <iostream>
+#include "includes.hpp"
 
 // Класс Animation предназначен для управления анимацией, используя набор спрайтов из одного текстурного файла.
 // Этот класс позволяет создавать анимации, которые могут быть воспроизведены в определенное время, с возможностью повторения.

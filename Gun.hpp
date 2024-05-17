@@ -1,10 +1,8 @@
 #ifndef GUN_HPP
 #define GUN_HPP
 
-#include <SFML/Graphics.hpp>
-#include <vector>
-#include <string>
-#include <random>
+#include "includes.hpp"
+
 #include "Animation.hpp"
 #include "Bullet.hpp"
 
@@ -27,9 +25,6 @@ public:
     // Вращает пушку на основе заданных координат и направления.
     void rotate(float x, float y, float direct_x, float direct_y);
 
-    // Увеличивает на 1 количество магазинов
-    void new_magazine(void);
-
     // Выстрел, если возможно, на основе текущего времени и состояния игры.
     void shoot(__int64_t cur_time, bool is_running);
 
@@ -41,7 +36,6 @@ public:
 
     // Обновляет патроны в пушке при перезарядке
     void upgrade(__int64_t cur_time);
-
 
     /*
      * ===================================================
@@ -68,10 +62,10 @@ public:
     // Возращает вектор ссылок на текущее состояние magazine
     std::pair<std::vector<Bullet>::iterator, std::vector<Bullet>::iterator> get_bullets(void);
 
-    // Изменяет максимальное количество патронов
-    void change_magazine_size(std::size_t delta_size);
+    // Добавляет рожок с патронами
+    void add_magazine(void);
 
-    // Изменяет скорость перезарядки
+    // Изменяет скорость перезарядки на delta_time
     void change_recharge_time(__int64_t delta_time);
 
     // Изменяет разброс

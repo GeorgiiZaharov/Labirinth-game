@@ -10,7 +10,7 @@ void People::set_position(const sf::FloatRect& new_pos)
 {
     pos = new_pos;
     hitbox = new_pos;
-    health_bar = HealthBar(sf::FloatRect(pos.left, pos.top - 15, pos.width, 15.0f), cur_health);
+    health_bar = HealthBar(sf::FloatRect(pos.left, pos.top - 15, pos.width, 15.0f), cur_health, max_health);
     // изменяем размер спрайтов в анимации
     idle_anim.resize_animation(pos);
     walking_anim.resize_animation(pos);
@@ -187,26 +187,6 @@ void People::change_cur_health(int delta_health)
     cur_health += delta_health;
 }
 
-void People::change_max_health(int delta_health)
-{
-    max_health += delta_health;
-}
-
-void People::set_max_health(int new_max_health)
-{
-    max_health = new_max_health;
-}
-
-void People::change_damage(int delta_damage)
-{
-    gun.change_damage(delta_damage);
-}
-
-void People::set_speed(int new_speed)
-{
-    speed = new_speed;
-}
-
 std::pair<std::vector<Bullet>::iterator, std::vector<Bullet>::iterator> People::get_bullets(void)
 {
     return gun.get_bullets();
@@ -230,21 +210,6 @@ float People::get_spread(void) const
 std::size_t People::get_recharge_time(void) const
 {
     return gun.get_recharge_time();
-}
-
-void People::change_magazine_size(std::size_t delta_size)
-{
-    gun.change_magazine_size(delta_size);
-}
-
-void People::change_recharge_time(__int64_t delta_time)
-{
-    gun.change_recharge_time(delta_time);
-}
-
-void People::change_spread(float delta_spread)
-{
-    gun.change_spread(delta_spread);
 }
 
 sf::Sprite People::get_presentation_sprite(__int64_t cur_time)

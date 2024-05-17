@@ -16,10 +16,10 @@ bool Board::loadResources(void)
 {
 	bool success = true;
 
-    if (!bg_tex.loadFromFile("bg_cell.png"))
+    if (!bg_tex.loadFromFile("src/bg_cell.png"))
         success = false;
 
-    if (!border_tex.loadFromFile("border_cell.png"))
+    if (!border_tex.loadFromFile("src/border_cell.png"))
         success = false;
 
     return success;
@@ -254,34 +254,58 @@ void Board::wall_destroyer(const sf::FloatRect& obj_pos)
 	else if (dist_up < dist_left && dist_up < dist_down && dist_up < dist_right) // если кратчайшее до верхей
 		direct.x -= 1;
 	else direct.x += 1;
+
+	auto v_begin = graph[std::make_pair(cell_cor.x, cell_cor.y)].begin();
+	auto v_end = graph[std::make_pair(cell_cor.x, cell_cor.y)].end();
+
 	// удаляем стены которые лежат рядом с объектом
 	if (direct.x == 1 && cell_cor.x + 1 != static_cast<int>(m)) // вниз и мы не на последнем ряду
 	{
+		// удаляем соответсвующие стенки
 		cells[cell_cor.x][cell_cor.y].is_down = false;
 		cells[cell_cor.x + 1][cell_cor.y].is_up = false;
-		graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x + 1, cell_cor.y));
-		graph[std::make_pair(cell_cor.x + 1, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		// добавляем новый путь в graph, если он еще не там
+		if (std::find(v_begin, v_end, std::make_pair(cell_cor.x + 1, cell_cor.y)) == v_end)
+		{
+			graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x + 1, cell_cor.y));
+			graph[std::make_pair(cell_cor.x + 1, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		}
 	}
 	else if (direct.x == -1 && cell_cor.x != 0) // вверх и мы не на верхнем ряду
 	{
-		cells[cell_cor.x][cell_cor.y].is_up = false;
+		// удаляем соответсвующие стенки
+		cells[cell_cor.x][cell_cor.y].is_up = false;		
 		cells[cell_cor.x - 1][cell_cor.y].is_down = false;
-		graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x - 1, cell_cor.y));
-		graph[std::make_pair(cell_cor.x - 1, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		// добавляем новый путь в graph, если он еще не там
+		if (std::find(v_begin, v_end, std::make_pair(cell_cor.x - 1, cell_cor.y)) == v_end)
+		{
+			graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x - 1, cell_cor.y));
+			graph[std::make_pair(cell_cor.x - 1, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		}
 	}
 	else if (direct.y == 1 && cell_cor.y + 1 != static_cast<int>(n)) // вправо и мы не в крайней правой колонке
 	{
+		// удаляем соответсвующие стенки
 		cells[cell_cor.x][cell_cor.y].is_right = false;
 		cells[cell_cor.x][cell_cor.y + 1].is_left = false;
-		graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y + 1));
-		graph[std::make_pair(cell_cor.x, cell_cor.y + 1)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		// добавляем новый путь в graph, если он еще не там
+		if (std::find(v_begin, v_end, std::make_pair(cell_cor.x, cell_cor.y + 1)) == v_end)
+		{
+			graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y + 1));
+			graph[std::make_pair(cell_cor.x, cell_cor.y + 1)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		}
 	}
 	else if (direct.y == -1 && cell_cor.y != 0) // влево и мы не в крайней левой колонке
 	{
+		// удаляем соответсвующие стенки
 		cells[cell_cor.x][cell_cor.y].is_left = false;
 		cells[cell_cor.x][cell_cor.y - 1].is_right = false;
-		graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y - 1));
-		graph[std::make_pair(cell_cor.x, cell_cor.y - 1)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		// добавляем новый путь в graph, если он еще не там
+		if (std::find(v_begin, v_end, std::make_pair(cell_cor.x, cell_cor.y - 1)) == v_end)
+		{
+			graph[std::make_pair(cell_cor.x, cell_cor.y)].push_back(std::make_pair(cell_cor.x, cell_cor.y - 1));
+			graph[std::make_pair(cell_cor.x, cell_cor.y - 1)].push_back(std::make_pair(cell_cor.x, cell_cor.y));
+		}
 	}
 }
 

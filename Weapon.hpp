@@ -1,17 +1,8 @@
-#ifndef AKR_HPP
-#define AKR_HPP
+#ifndef WEAPON_HPP
+#define WEAPON_HPP
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Window/Keyboard.hpp>
+#include "includes.hpp"
 
-#include <string>
-#include <vector>
-#include <iostream>
-#include <cmath>
-#include <random>
 #include "Gun.hpp"
 
 class AKR : public Gun
@@ -26,4 +17,33 @@ private:
     static sf::Sound shoot_sound, recharge_sound;
     static sf::SoundBuffer shoot_sound_buffer, recharge_sound_buffer;
 };
-#endif // AKR_HPP
+
+class M416 : public Gun
+{
+public:
+    explicit M416(void) = default;
+    explicit M416(float h, float w, float r);
+    static bool loadResources(void);
+
+private:
+    static sf::Texture gun_tex, bullet_tex, fire_anim_tex, recharge_anim_tex, presentation_tex;
+    static sf::Sound shoot_sound, recharge_sound;
+    static sf::SoundBuffer shoot_sound_buffer, recharge_sound_buffer;
+};
+
+class Desert_eagle : public Gun
+{
+public:
+    explicit Desert_eagle(void) = default;
+    explicit Desert_eagle(float h, float w, float r);
+    static bool loadResources(void);
+
+private:
+    static sf::Texture gun_tex, bullet_tex, fire_anim_tex, recharge_anim_tex, presentation_tex;
+    static sf::Sound shoot_sound, recharge_sound;
+    static sf::SoundBuffer shoot_sound_buffer, recharge_sound_buffer;
+};
+
+#endif
+
+

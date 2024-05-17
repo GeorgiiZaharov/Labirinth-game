@@ -2,7 +2,7 @@
 #ifndef HEALTHBAR_HPP
 #define HEALTHBAR_HPP
 
-#include <SFML/Graphics.hpp>
+#include "includes.hpp"
 
 class HealthBar
 {
@@ -15,7 +15,7 @@ public:
     // Default constructor
     explicit HealthBar(void) = default;
     // Constructor with parameters for position and initial health
-    explicit HealthBar(const sf::FloatRect& cur_pos, int health);
+    explicit HealthBar(const sf::FloatRect& cur_pos, int health, int max_health);
 
     /*
     * ===================================================
@@ -33,9 +33,6 @@ public:
 
     // Method to draw the health bar and its border on a window
     void draw(sf::RenderWindow& window);
-
-    // Перемещает healthBar в нужную позицию
-    void set_position(float w, float h);
 private:
     // Health bar and border shapes
     sf::RectangleShape healthBar, border;

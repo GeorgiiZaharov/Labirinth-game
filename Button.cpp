@@ -6,9 +6,9 @@ pressed(false),
 text(str, font, 20)
 {
 	float k = 1.0f / std::sqrt(1.05f); // коэфицент пропорциональности (увеличиваем на 0.5%)
-	small_pos = sf::FloatRect(pos.left + (pos.left * (1 - k)) / 2,
-							  pos.top + (pos.top * (1 - k)) / 2,
-							  k * pos.left, 
+	small_pos = sf::FloatRect(pos.left + (pos.width - pos.width * k) / 2,
+							  pos.top + (pos.height - pos.height * k) / 2,
+							  k * pos.width, 
 							  k * pos.height
 							  );
     // инициализируем спрайты 
@@ -19,6 +19,7 @@ text(str, font, 20)
         small_pos.width / small_sprite_bounds.width,
         small_pos.height / small_sprite_bounds.height
     );
+
     small_sprite.setPosition(small_pos.left, small_pos.top);
     // большой
     big_sprite.setTexture(button_bg_tex);
@@ -27,6 +28,7 @@ text(str, font, 20)
         big_pos.width / big_sprite_bounds.width,
         big_pos.height / big_sprite_bounds.height
     );
+
     big_sprite.setPosition(big_pos.left, big_pos.top);
 
     // инициализируем text
@@ -69,10 +71,10 @@ void Button::draw(sf::RenderWindow& window, const sf::Vector2f& mousePos)
 bool Button::loadResources(void)
 {
 	bool success = true;
-	if (!button_bg_tex.loadFromFile("button_background.png"))
+	if (!button_bg_tex.loadFromFile("src/button.png"))
 		success = false;
 
-	if (!font.loadFromFile("Roboto-Black.ttf"))
+	if (!font.loadFromFile("src/Roboto-Black.ttf"))
 		success = false;
 
 	return success;

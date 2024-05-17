@@ -7,7 +7,7 @@ cash(10)
     People::set_animation(
         Animation(hero_tex, 100, 100, 1, 0, true),
         Animation(walking_tex, 100, 100, 2, 500, false),
-        Animation(blood_spatter_tex, 100 / 2, 100 / 2, 1, 1000, false),
+        Animation(blood_spatter_tex, 100 / 2, 100 / 2, 2, 1000, false),
         Animation(dead_tex, 100, 100, 1, 0, true), 
         Animation(present_tex, 250, 250, 2, 300, false)
     );
@@ -20,19 +20,19 @@ bool Hero::loadResources(void)
 {
     bool success = true;
 
-    if (!hero_tex.loadFromFile("hero.png"))
+    if (!hero_tex.loadFromFile("src/hero.png"))
         success = false;
 
-    if (!walking_tex.loadFromFile("walking_anim.png"))
+    if (!walking_tex.loadFromFile("src/hero_walking.png"))
         success = false;
 
-    if (!blood_spatter_tex.loadFromFile("blood_spatter_anim.png"))
+    if (!blood_spatter_tex.loadFromFile("src/blood_spatter.png"))
         success = false;
 
-    if (!dead_tex.loadFromFile("dead.png"))
+    if (!dead_tex.loadFromFile("src/dead.png"))
         success = false;
 
-    if (!present_tex.loadFromFile("hero_prsentation.png"))
+    if (!present_tex.loadFromFile("src/hero_presentation.png"))
         success = false;
 
     return success;
@@ -100,14 +100,19 @@ std::vector<sf::Vector2f> Hero::boom(void)
     return result;
 }
 
+void Hero::suicide(void)
+{
+    cur_health = 0;
+}
+
 void Hero::draw(sf::RenderWindow& window, __int64_t cur_time)
 {
-    // ищем первую неактивированную бомбу и считаем для нее статистику
-    for (auto bomb : bombs)
+    // ищем первую неактивированную бомбу и считаем для нее статистику по установке
+    for (auto &bomb : bombs)
     {
         if (!bomb.is_activate())
         {
-            std::pair<__int64_t, __int64_t> plant_info = bomb.get_plant_info();
+            std::pair<__int64_t, __int64_t> plant_info = bomb.get_plant_info();     // возращает информацию по установке бомбы
             if (plant_info.first == 0)  // если мы ее нисколько не плэнтили
             {
                 break;
@@ -124,7 +129,7 @@ void Hero::draw(sf::RenderWindow& window, __int64_t cur_time)
         }
     }
     // отрисовывает все бомбы hero если они установлены
-    for (auto bomb : bombs)
+    for (auto &bomb : bombs)
     {
         if (bomb.is_activate())
         {
@@ -132,7 +137,7 @@ void Hero::draw(sf::RenderWindow& window, __int64_t cur_time)
         }
         else
         {
-            break;
+            break;      // дошли до части неактивированных бомб => дальше смотреть смысла нет
         }
     }
     People::draw(window, cur_time);
@@ -146,6 +151,45 @@ void Hero::change_cash(int delta_cash)
 int Hero::get_cash(void) const
 {
     return cash;
+}
+////////////////////////////////////////////////////
+
+void Hero::update_cur_health(void)
+{
+    cur_health = max_health;
+}
+
+
+void Hero::change_max_health(int delta_health)
+{
+    max_health += delta_health;
+    health_bar.set_max_health(max_health);
+}
+
+void Hero::change_damage(int delta_damage)
+{
+    gun.change_damage(delta_damage);
+}
+
+void Hero::change_speed(int delta_speed)
+{
+    speed += delta_speed;
+}
+
+void Hero::change_recharge_time(__int64_t delta_time)
+{
+    gun.change_recharge_time(delta_time);
+}
+
+
+void Hero::change_spread(float delta_spread)
+{
+    gun.change_spread(delta_spread);
+}
+
+void Hero::add_magazine(void)
+{
+    gun.add_magazine();
 }
 
 sf::Texture Hero::hero_tex, Hero::walking_tex, Hero::blood_spatter_tex, Hero::dead_tex, Hero::present_tex;
