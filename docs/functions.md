@@ -54,7 +54,7 @@
 #### Диаграма активности
 
 * [оффлай файл](./diagram_text/bomb_activity_diag.puml)
-![Диаграмма вариантов использования](./pictures/bomb_activity_diag.png)
+![Диаграмма вариантов использования](./pictures/bomb_acitivity_diag.png)
 
 ---
 
