@@ -1,0 +1,24 @@
+@startuml
+title Алгоритм стрельбы - Диаграмма последовательности
+
+actor Пользователь as User
+participant "Gun::shoot(cur_time, is_running)" as Gun
+
+User -> Gun: Запрос на стрельбу
+activate Gun
+
+Gun -> Gun: Проверка доступности выстрела
+alt Можно стрелять
+    Gun -> Gun: Подготовка к выстрелу
+    Gun -> Gun: Выстрел пули
+else Нет патронов
+    Gun -> Gun: Перезарядка
+    alt Патроны есть
+        Gun -> Gun: Подготовка к перезарядке
+        Gun -> Gun: Перезарядка
+    end
+end
+
+Gun --> User: Окончание стрельбы или перезарядки
+deactivate Gun
+@enduml

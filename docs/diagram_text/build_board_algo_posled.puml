@@ -1,0 +1,24 @@
+@startuml
+title Алгоритм построения лабиринта - Диаграмма последовательности
+
+actor Пользователь as User
+participant Программа as Program
+
+User -> Program: Запустить алгоритм
+activate Program
+
+Program -> Program: Начать выполнение алгоритма
+Program -> Program: Проверить, был ли получен сигнал начала работы
+Program -> Program: Начать исследование лабиринта
+
+Program -> Program: Проверить соседние ячейки
+Program -> Program: Проверить, есть ли доступные ходы
+Program -> Program: Если нет доступных ходов, завершить исследование
+Program -> Program: Если есть доступные ходы, выбрать один из них и совершить ход
+
+Program -> Program: Обновить граф лабиринта и информацию о стенах
+Program -> Program: Повторить исследование с новой позиции
+
+Program --> User: Сообщить об окончании алгоритма
+deactivate Program
+@enduml

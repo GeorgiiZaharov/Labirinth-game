@@ -1,0 +1,21 @@
+@startuml
+title Алгоритм навигации - Диаграмма последовательности
+
+actor Пользователь as User
+participant "Board::navigator(index_from, index_to, max_depth)" as Board
+
+User -> Board: Запрос на навигацию
+activate Board
+
+Board -> Board: Начать поиск пути
+Board -> Board: Проверить возможные ходы
+Board -> Board: Проверить достижение максимальной глубины или цели
+alt Достигнута цель
+    Board --> User: Сообщить о достижении цели
+else Максимальная глубина достигнута или путь не найден
+    Board --> User: Сообщить о невозможности навигации
+end
+Board -> Board: Построить найденный путь
+Board --> User: Передать найденный путь или пустой список
+deactivate Board
+@enduml
