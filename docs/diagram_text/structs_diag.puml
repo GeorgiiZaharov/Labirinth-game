@@ -1,0 +1,45 @@
+@startuml
+object Animation {
+    tex: sf::Texture*
+    sound: sf::Sound
+    h: float
+    w: float
+    num_sprites: std::size_t
+    cur_sprite_num: std::size_t
+    time_for_change: __int64_t
+    last_time: __int64_t
+    sprites: std::vector<sf::Sprite>
+    running: bool
+    is_looped: bool
+    with_sound: bool
+}
+
+object Bomb {
+    activate: bool
+    w: int
+    h: int
+    planting_time: __int64_t
+    start_plant_time: __int64_t
+    plant_duration: __int64_t
+    last_bomb_pos: sf::Vector2f
+    wait_anim: Animation
+}
+
+object Bullet {
+    was_collision: bool
+    dx: float
+    dy: float
+    speed: int
+    last_time: __int64_t
+    sprite: sf::Sprite
+}
+
+object Button {
+    big_pos: sf::FloatRect
+    small_pos: sf::FloatRect
+    pressed: bool
+    text: sf::Text
+    big_sprite: sf::Sprite
+    small_sprite: sf::Sprite
+}
+@enduml

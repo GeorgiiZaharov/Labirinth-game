@@ -1,0 +1,177 @@
+@startuml
+
+class Enemy {
+    - cur_cor: sf::Vector2i
+    - path_to_hero: std::vector&lt;std::pair&lt;int, int&gt;&gt;
+    - hero_pos: sf::Vector2f
+    - saw_the_player: bool
+    - distance: int
+    - cost: int
+    - textures: std::vector&lt;std::vector&lt;sf::Texture&gt;&gt;
+    - distances: std::vector&lt;int&gt;
+    - costs: std::vector&lt;int&gt;
+    + Enemy()
+    + Enemy(num_model: std::size_t)
+    + loadResources(): bool
+    + set_path_to_hero(path_to_hero: std::vector&lt;std::pair&lt;int, int&gt;&gt;): void
+    + set_cooridinate(cor: sf::Vector2i): void
+    + set_hero_pos(hero_pos: sf::FloatRect): void
+    + aim(): void
+    + shooting(cur_time: __int64_t): void
+    + moving(cur_time: __int64_t): void
+    + get_cost(): int
+    + get_distance(): int
+    - get_mid_dot(rec: sf::FloatRect): sf::Vector2f
+    - is_open_pozition(): bool
+}
+
+class People {
+    - gun: Gun
+    - pos: sf::FloatRect
+    - cur_health: int
+    - max_health: int
+    - speed: int
+    - dx: float
+    - dy: float
+    - health_bar: HealthBar
+    - hitbox: sf::FloatRect
+    - last_time: __int64_t
+    - idle_anim: Animation
+    - walking_anim: Animation
+    - blood_spatter_anim: Animation
+    - dead_anim: Animation
+    - presentation_anim: Animation
+    - is_walking: bool
+    - bullet_contact_vec: sf::Vector2f
+    + People()
+    + People(health: int, speed: int)
+    + draw(window: sf::RenderWindow&amp;, cur_time: __int64_t)
+    + aim(x: float, y: float): void
+    + moving(cur_time: __int64_t, move_dx: float, move_dy: float): void
+    + shooting(cur_time: __int64_t): void
+    + check_collision(bullet: Bullet&amp;, cur_time: __int64_t): bool
+    + upgrade_gun(cur_time: __int64_t): void
+    + alive(): bool
+    + intersection(mousePos: sf::Vector2f): bool
+    + start_presentation_animation(cur_time: __int64_t): void
+    + set_position(new_pos: sf::FloatRect): void
+    + set_weapon(weapon: Gun): void
+    + get_hitbox(): sf::FloatRect
+    + get_cur_health(): int
+    + get_max_health(): int
+    + get_damage(): int
+    + get_speed(): int
+    + get_direct(): sf::Vector2f
+    + get_gun_info(): std::size_t
+    + get_spread(): float
+    + get_recharge_time(): std::size_t
+    + get_bullets(): std::pair&lt;std::vector&lt;Bullet&gt;::iterator, std::vector&lt;Bullet&gt;::iterator&gt;
+    + get_magazine_info(): std::pair&lt;std::size_t, std::size_t&gt;
+    + get_presentation_sprite(cur_time: __int64_t): sf::Sprite
+    - set_animation(idle_animation: Animation, walking_animation: Animation, blood_spatter_animation: Animation, dead_animation: Animation, presentation_animation: Animation): void
+    - load_data(): void
+}
+
+Enemy --|> People
+
+class Gun {
+    - gun_tex: sf::Texture*
+    - bullet_tex: sf::Texture*
+    - anim_tex: sf::Texture*
+    - gun_h: float
+    - gun_w: float
+    - bullet_h: float
+    - bullet_w: float
+    - bullets_in_gun: std::size_t
+    - magazine_size: std::size_t
+    - magazine_cnt: std::size_t
+    - last_shoot_time: __int64_t
+    - bullet_duration: __int64_t
+    - recharge_time: __int64_t
+    - speed_bullet: float
+    - bullet_height: float
+    - bullet_width: float
+    - gun_sprite: sf::Sprite
+    - bullet_sprite: sf::Sprite
+    - magazine: std::vector&lt;Bullet&gt;
+    - poz_x: float
+    - poz_y: float
+    - r: float
+    - dx: float
+    - dy: float
+    - spread: float
+    - damage: int
+    - fire_anim: Animation
+    - recharge_anim: Animation
+    - presentation_anim: Animation
+    + Gun()
+    + Gun(gun_tex: sf::Texture&amp;, bullet_tex: sf::Texture&amp;, gun_h: float, gun_w: float, bullet_h: float, bullet_w: float, bullet_speed: float, bullet_duration: __int64_t, recharge_time: __int64_t, magazine_size: std::size_t, magazine_cnt: std::size_t, r: float, spread: float, damage: int)
+    ~ Gun()
+    + rotate(x: float, y: float, direct_x: float, direct_y: float): void
+    + shoot(cur_time: __int64_t, is_running: bool): void
+    + move_bullets(cur_time: __int64_t): void
+    + draw(window: sf::RenderWindow&amp;, cur_time: __int64_t): void
+    + upgrade(cur_time: __int64_t): void
+    + get_magazine_info(): std::pair&lt;std::size_t, std::size_t&gt;
+    + get_gun_info(): std::size_t
+    + get_spread(): float
+    + get_damage(): int
+    + change_damage(delta_damage: int): void
+    + get_recharge_time(): std::size_t
+    + get_bullets(): std::pair&lt;std::vector&lt;Bullet&gt;::iterator, std::vector&lt;Bullet&gt;::iterator&gt;
+    + add_magazine(): void
+    + change_recharge_time(delta_time: __int64_t): void
+    + change_spread(delta_spread: float): void
+    + start_presentation_animation(cur_time: __int64_t): void
+    + get_presentation_sprite(cur_time: __int64_t): sf::Sprite
+}
+
+Enemy --> Gun
+
+class Bullet {
+    - was_collision: bool
+    - dx: float
+    - dy: float
+    - speed: int
+    - last_time: __int64_t
+    - sprite: sf::Sprite
+    + Bullet()
+    + Bullet(bullet_sprite: sf::Sprite&amp;, poz: sf::FloatRect, dx: float, dy: float, speed: float, cur_time: __int64_t)
+    + get_rect(): sf::FloatRect
+    + move(cur_time: __int64_t): void
+    + draw(window: sf::RenderWindow&amp;): void
+    + get_collision(): bool
+    + getGlobalBounds(): sf::FloatRect
+    + get_direct(): sf::Vector2f
+    + collision(): void
+}
+
+Gun --> Bullet
+
+class HealthBar {
+    - healthBar: sf::RectangleShape
+    - border: sf::RectangleShape
+    - cur_pos: sf::FloatRect
+    - max_health: int
+    + HealthBar()
+    + HealthBar(cur_pos: sf::FloatRect&amp;, health: int, max_health: int)
+    + set_health(cur_health: int): void
+    + set_max_health(new_max_health: int): void
+    + move(bias_x: float, bias_y: float): void
+    + draw(window: sf::RenderWindow&amp;): void
+}
+
+People --> HealthBar
+
+class Animation {
+    + Animation()
+    + Animation(tex: sf::Texture&amp;, sound: const sf::Sound&amp;, h: float, w: float, n: std::size_t, time_for_change: __int64_t, is_looped: bool)
+    + Animation(tex: sf::Texture&amp;, h: float, w: float, n: std::size_t, time_for_change: __int64_t, is_looped: bool)
+    + start_animation(cur_time: __int64_t): void
+    + resize_animation(pos: sf::FloatRect&amp;): void
+    + is_running(): bool
+    + get_sprite(cur_time: __int64_t): sf::Sprite
+    - load_data(): void
+}
+
+Enemy --> Animation

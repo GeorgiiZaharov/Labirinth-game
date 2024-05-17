@@ -1,0 +1,142 @@
+@startuml
+
+class GameManager {
+    - window: sf::RenderWindow&
+    - board: Board
+    - hero: Hero
+    - enemies: std::vector<Enemy>
+    - clock: sf::Clock
+    - panel: Panel
+    + GameManager()
+    + GameManager(window: sf::RenderWindow&)
+    + run(): void
+    - input(): void
+    - treatment(): void
+    - output(): void
+    - new_level(): void
+    - init(): void
+    - make_board_boom(): void
+    - is_hero(globalMousePos: sf::Vector2f): bool
+    - is_enemy(globalMousePos: sf::Vector2f): bool
+    - get_enemy(globalMousePos: sf::Vector2f): Enemy&
+}
+
+class Board {
+    - n: std::size_t
+    - m: std::size_t
+    - screen_w: int
+    - screen_h: int
+    - cell_w: float
+    - cell_h: float
+    - border_width: float
+    - pos: sf::FloatRect
+    - cells: std::vector<std::vector<Cell>>
+    - graph: std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> 
+    - was: std::set<std::pair<int, int>>
+    + Board()
+    + Board(pos: sf::FloatRect&)
+    + loadResources(): bool
+    + build(): void
+    + navigator(index_from: sf::Vector2i&, index_to: sf::Vector2i&, max_depth: int = 0): std::vector<std::pair<int, int>>
+    + draw(window: sf::RenderWindow&, cur_time: __int64_t): void
+    + check_collision(r: sf::FloatRect&): bool
+    + check_collision(b: Bullet&): void
+    + wall_destroyer(obj_pos: sf::FloatRect&): void
+    + boom_cell(x: int, y: int, cur_time: __int64_t): void
+    + neighbour(obj_pos: sf::FloatRect&): std::vector<std::pair<int, int>>
+    + get_people_size(): float
+    + get_cell_size(): sf::Vector2f
+    + set_board_size(board_width: std::size_t, board_height: std::size_t): void
+    + calc_pos_on_board(obj_pos: sf::FloatRect&): sf::Vector2i
+    + calc_pos_on_board(obj_pos: sf::FloatRect&, direct: sf::Vector2f&): sf::Vector2i
+    - is_go_abroad(w: int, h: int): bool
+    - dfs(w: int = 0, h: int = 0): void
+}
+
+class Panel {
+    - pos: sf::FloatRect
+    - window: sf::RenderWindow&
+    - bomb_btn: Button
+    - magazine_btn: Button
+    - recharge_btn: Button
+    - flame_arrester_btn: Button
+    - first_aid_kit_btn: Button
+    - max_health_btn: Button
+    - speed_btn: Button
+    - menu_btn: Button
+    - people_info_text: sf::Text
+    - gun_info_text: sf::Text
+    - title1_text: sf::Text
+    - title2_text: sf::Text
+    - cash_text: sf::Text
+    - cur_level_text: sf::Text
+    - panel_bg_sprite: sf::Sprite
+    - font: sf::Font
+    + Panel()
+    + Panel(pos: sf::FloatRect&, window: sf::RenderWindow&)
+    + loadResources(): bool
+    + draw_people_info(h: Hero&, cur_time: __int64_t): void
+    + draw_people_info(enemy: Enemy&, cur_time: __int64_t): void
+    + draw_shop(h: Hero&, cur_level: int): void
+    + try_press_button(h: Hero&): bool
+    - button_init(): void
+    - settings_text(text: sf::Text&, color: sf::Color = sf::Color::White, size: int = 20): void
+}
+
+class Cell {
+    - is_up: bool
+    - is_right: bool
+    - is_down: bool
+    - is_left: bool
+    - rec: sf::Sprite
+    - line_up: sf::Sprite
+    - line_right: sf::Sprite
+    - line_down: sf::Sprite
+    - line_left: sf::Sprite
+    - boom_anim: Animation
+    + Cell()
+    + Cell(bg_tex: sf::Texture&, border_tex: sf::Texture&, x: float, y: float, cell_w: float, cell_h: float, border_width: float)
+    + loadResources(): bool
+    + make_boom(cur_time: __int64_t): void
+    + draw(window: sf::RenderWindow&, cur_time: __int64_t): void
+    + check_collision(r: sf::FloatRect&): bool
+}
+
+class Button {
+    - big_pos: sf::FloatRect
+    - small_pos: sf::FloatRect
+    - pressed: bool
+    - text: sf::Text
+    - big_sprite: sf::Sprite
+    - small_sprite: sf::Sprite
+    + Button()
+    + Button(pos: sf::FloatRect&, str: std::string, color: sf::Color = sf::Color::White)
+    + try_to_press(mousePos: sf::Vector2f&): void
+    + is_pressed(): bool
+    + loadResources(): bool
+    + draw(window: sf::RenderWindow&, mousePos: sf::Vector2f&): void
+    + get_hitbox(): sf::FloatRect
+}
+
+class Hero {
+}
+
+class Enemy {
+}
+
+
+GameManager --> Board
+GameManager --> Hero
+GameManager --> Enemy
+GameManager --> Panel
+
+Board --> Cell
+Board --> Bullet
+
+Panel --> Button
+Panel --> Hero
+Panel --> Enemy
+
+Cell --> Animation
+
+@enduml
