@@ -65,10 +65,10 @@
 
 - диаграмма состояний
 
- * [оффлай файл](./diagram_text/navigator_posl_diag.puml)   
-![Диаграмма состояний](./pictures/navigator_posl_diag.png)  
+ * [оффлай файл](./diagram_text/navigator_state_diag.puml)   
+![Диаграмма состояний](./pictures/navigator_state_diag.png)  
 
 - диаграмма последовательности
 
- * [оффлай файл](./diagram_text/navigator_state_posled.puml)   
-![Диаграмма состояний](./pictures/navigator_state_posled.png)  
+ * [оффлай файл](./diagram_text/navigator_posl_diag.puml)   
+![Диаграмма состояний](./pictures/navigator_posl_diag.png)  
