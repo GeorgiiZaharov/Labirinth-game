@@ -1,0 +1,25 @@
+@startuml
+actor Пользователь
+participant "Board::navigator" as Navigator
+database Граф
+
+Пользователь -> Navigator: Запрос поиска пути
+activate Navigator
+
+Navigator -> Граф: Получение графа
+activate Граф
+Граф --> Navigator: Граф получен
+deactivate Граф
+
+Navigator -> Navigator: Инициализация начальной вершины и очереди
+loop Поиск пути
+    alt Найден путь
+        Navigator -> Navigator: Сбор пути
+        break
+    else Нет пути
+        Navigator -> Navigator: Продолжение поиска пути
+    end
+end
+Navigator --> Пользователь: Путь найден / Нет пути
+deactivate Navigator
+@enduml
