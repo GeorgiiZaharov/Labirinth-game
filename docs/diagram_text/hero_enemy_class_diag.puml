@@ -1,0 +1,52 @@
+class Hero {
+    - plantBar: sf::RectangleShape // полоса зарядки бомб
+    - bombs: std::vector<Bomb> // список бомб
+    - cash: int // количество денег
+    + Hero() // конструктор по умолчанию
+    + draw(window: sf::RenderWindow, cur_time: __int64_t): void // отрисовка героя на экране
+    + loadResources(): bool // загрузка ресурсов для героя
+    + add_bomb(): void // добавление бомбы
+    + get_bomb_cnt(): int // получение количества бомб
+    + planting(cur_time: __int64_t): void // установка бомбы
+    + drop_planting(): void // сброс установки бомбы
+    + boom(): std::vector<sf::Vector2f> // активация взрыва бомб
+    + suicide(): void // самоубийство героя
+    + change_cash(delta_cash: int): void // изменение количества денег
+    + get_cash(): int // получение количества денег
+    + update_cur_health(): void // обновление текущего здоровья
+    + change_max_health(delta_health: int): void // изменение максимального здоровья
+    + change_damage(delta_damage: int): void // изменение урона
+    + change_speed(delta_speed: int): void // изменение скорости
+    + add_magazine(): void // добавление магазина
+    + change_recharge_time(delta_time: __int64_t): void // изменение времени перезарядки
+    + change_spread(delta_spread: float): void // изменение разброса
+}
+
+class Enemy {
+    - cur_cor: sf::Vector2i // текущие координаты
+    - path_to_hero: std::vector<std::pair<int, int>> // путь к герою
+    - hero_pos: sf::Vector2f // позиция героя
+    - saw_the_player: bool // флаг обнаружения героя
+    - distance: int // расстояние до героя
+    - cost: int // стоимость
+    + Enemy() // конструктор по умолчанию
+    + draw(window: sf::RenderWindow, cur_time: __int64_t): void // отрисовка врага на экране
+    + loadResources(): bool // загрузка ресурсов для врага
+    + set_path_to_hero(path_to_hero: std::vector<std::pair<int, int>>): void // установка пути к герою
+    + set_coordinate(cor: sf::Vector2i): void // установка координат
+    + set_hero_pos(pos: sf::FloatRect): void // установка позиции героя
+    + aim(): void // прицеливание
+    + shooting(cur_time: __int64_t): void // стрельба
+    + moving(cur_time: __int64_t): void // перемещение
+    + get_cost(): int // получение стоимости
+    + get_distance(): int // получение расстояния до героя
+}
+class People
+{
+}
+struct Bomb
+{
+}
+Hero --|> People
+Hero "1" *-- "many" Bomb
+Enemy --|> People

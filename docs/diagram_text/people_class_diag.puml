@@ -1,0 +1,67 @@
+@startuml
+class People {
+    - health: int // текущее здоровье персонажа
+    - speed: int // скорость перемещения персонажа
+    - pos: sf::FloatRect // позиция персонажа на экране
+    - cur_health: int // текущее здоровье персонажа
+    - max_health: int // максимальное здоровье персонажа
+    - dx: float // изменение позиции по x
+    - dy: float // изменение позиции по y
+    - health_bar: HealthBar // индикатор здоровья персонажа
+    - hitbox: sf::FloatRect // область персонажа для обработки столкновений
+    - last_time: __int64_t // время последнего обновления
+    - idle_anim: Animation // анимация покоя персонажа
+    - walking_anim: Animation // анимация ходьбы персонажа
+    - blood_spatter_anim: Animation // анимация кровавых пятен при получении урона
+    - dead_anim: Animation // анимация смерти персонажа
+    - presentation_anim: Animation // анимация презентации персонажа
+    + People() // конструктор по умолчанию
+    + People(health: int, speed: int) // конструктор с параметрами здоровья и скорости
+    + draw(window: sf::RenderWindow, cur_time: __int64_t): void // отрисовка персонажа на экране
+    + aim(x: float, y: float): void // установка цели для персонажа
+    + moving(cur_time: __int64_t, move_dx: float, move_dy: float): void // перемещение персонажа
+    + shooting(cur_time: __int64_t): void // выполнение выстрела
+    + check_collision(bullet: Bullet, cur_time: __int64_t): bool // проверка столкновения с пулей
+    + upgrade_gun(cur_time: __int64_t): void // улучшение оружия персонажа
+    + alive(): bool // проверка на то, жив ли персонаж
+    + intersection(mousePos: sf::Vector2f): bool // проверка на пересечение с указателем мыши
+    + start_presentation_animation(cur_time: __int64_t): void // запуск анимации презентации персонажа
+    + set_position(new_pos: sf::FloatRect): void // установка новой позиции персонажа
+    + set_weapon(weapon: Gun): void // установка оружия персонажа
+    + get_hitbox(): sf::FloatRect // получение области персонажа для обработки столкновений
+    + get_cur_health(): int // получение текущего здоровья персонажа
+    + get_max_health(): int // получение максимального здоровья персонажа
+    + get_damage(): int // получение урона от атаки персонажа
+    + get_speed(): int // получение скорости перемещения персонажа
+    + get_direct(): sf::Vector2f // получение направления перемещения персонажа
+    + get_gun_info(): std::size_t // получение информации об оружии персонажа
+    + get_spread(): float // получение разброса при стрельбе персонажа
+    + get_recharge_time(): std::size_t // получение времени перезарядки оружия персонажа
+    + get_bullets(): std::pair<std::vector<Bullet>::iterator, std::vector<Bullet>::iterator> // получение списка пуль персонажа
+    + get_magazine_info(): std::pair<std::size_t, std::size_t> // получение информации о патронах персонажа
+    + get_presentation_sprite(cur_time: __int64_t): sf::Sprite // получение спрайта для анимации презентации персонажа
+    + get_gun_presentation_sprite(cur_time: __int64_t): sf::Sprite // получение спрайта для анимации презентации оружия персонажа
+    + change_cur_health(delta_health: int): void // изменение текущего здоровья персонажа
+}
+
+class Gun
+{
+}
+
+struct HealthBar
+{
+}
+
+struct Animation
+{
+}
+
+
+
+
+People "1" *-- "1" HealthBar
+People "1" *-- "1" Gun
+People "1" *-- "1" Animation
+
+@enduml
+

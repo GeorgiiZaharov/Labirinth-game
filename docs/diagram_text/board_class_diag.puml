@@ -1,0 +1,43 @@
+class Board {
+    - n: std::size_t // количество строк
+    - m: std::size_t // количество столбцов
+    - screen_w: int // ширина экрана
+    - screen_h: int // высота экрана
+    - cell_w: float // ширина ячейки
+    - cell_h: float // высота ячейки
+    - border_width: float // ширина границы
+    - pos: sf::FloatRect // позиция доски
+    - cells: std::vector<std::vector<Cell>> // ячейки доски
+    - graph: std::map<std::pair<int, int>, std::vector<std::pair<int, int>>> // граф связей между ячейками
+    - was: std::set<std::pair<int, int>> // множество посещенных ячеек
+    + Board() // конструктор по умолчанию
+    + Board(pos: sf::FloatRect) // конструктор с параметром позиции
+    + loadResources(): bool // загрузка ресурсов
+    + build(): void // построение лабиринта
+    + navigator(index_from: sf::Vector2i, index_to: sf::Vector2i, max_depth: int = 0): std::vector<std::pair<int, int>> // навигация в лабиринте
+    + draw(window: sf::RenderWindow, cur_time: __int64_t): void // отрисовка доски на экране
+    + check_collision(r: sf::FloatRect): bool // проверка коллизий
+    + check_collision(b: Bullet): void // проверка коллизий с пулями
+    + wall_destroyer(obj_pos: sf::FloatRect): void // разрушение стены
+    + boom_cell(x: int, y: int, cur_time: __int64_t): void // взрыв ячейки
+    + neighbour(obj_pos: sf::FloatRect): std::vector<std::pair<int, int>> // поиск соседних ячеек
+    + get_people_size(): float // получение размера персонажа
+    + get_cell_size(): sf::Vector2f // получение размера ячейки
+    + set_board_size(board_width: std::size_t, board_height: std::size_t): void // установка размера доски
+    + calc_pos_on_board(obj_pos: sf::FloatRect): sf::Vector2i // вычисление позиции на доске
+    + calc_pos_on_board(obj_pos: sf::FloatRect, direct: sf::Vector2f): sf::Vector2i // вычисление позиции на доске с учетом направления
+}
+
+class Cell {
+    - is_up: bool // наличие верхней стены
+    - is_right: bool // наличие правой стены
+    - is_down: bool // наличие нижней стены
+    - is_left: bool // наличие левой стены
+    + Cell() // конструктор по умолчанию
+    + Cell(bg_tex: sf::Texture, border_tex: sf::Texture, x: float, y: float, cell_w: float, cell_h: float, border_width: float) // конструктор с параметрами
+    + loadResources(): bool // загрузка ресурсов
+    + make_boom(cur_time: __int64_t): void // взрыв ячейки
+    + draw(window: sf::RenderWindow, cur_time: __int64_t): void // отрисовка ячейки на экране
+    + check_collision(r: sf::FloatRect): bool // проверка коллизии
+}
+Board "1" *-- "many" Cell

@@ -1,0 +1,60 @@
+class Gun {
+    - gun_tex: sf::Texture* // текстура оружия
+    - bullet_tex: sf::Texture* // текстура пули
+    - anim_tex: sf::Texture* // текстура для анимации
+    - gun_h: float // высота оружия
+    - gun_w: float // ширина оружия
+    - bullet_h: float // высота пули
+    - bullet_w: float // ширина пули
+    - bullets_in_gun: std::size_t // количество патронов в оружии
+    - magazine_size: std::size_t // размер магазина
+    - magazine_cnt: std::size_t // количество магазинов
+    - last_shoot_time: __int64_t // время последнего выстрела
+    - bullet_duration: __int64_t // длительность существования пули
+    - recharge_time: __int64_t // время перезарядки
+    - speed_bullet: float // скорость полета пули
+    - bullet_height: float // высота спрайта пули
+    - bullet_width: float // ширина спрайта пули
+    - poz_x: float // координата x оружия
+    - poz_y: float // координата y оружия
+    - r: float // радиус вращения
+    - dx: float // изменение позиции по x
+    - dy: float // изменение позиции по y
+    - spread: float // разброс при стрельбе
+    - damage: int // урон от выстрела
+    - fire_anim: Animation // анимация выстрела
+    - recharge_anim: Animation // анимация перезарядки
+    - presentation_anim: Animation // анимация презентации
+    - gun_sprite: sf::Sprite // спрайт оружия
+    - bullet_sprite: sf::Sprite // спрайт пули
+    - magazine: std::vector<Bullet> // список пуль в магазине
+    + Gun() // конструктор по умолчанию
+    + Gun(gun_tex: sf::Texture&, bullet_tex: sf::Texture&, gun_h: float, gun_w: float, bullet_h: float, bullet_w: float, bullet_speed: float, bullet_duration: __int64_t, recharge_time: __int64_t, magazine_size: std::size_t, magazine_cnt: std::size_t, r: float, spread: float, damage: int) // конструктор с параметрами
+    + rotate(x: float, y: float, direct_x: float, direct_y: float): void // вращение оружия
+    + shoot(cur_time: __int64_t, is_running: bool): void // выполнение выстрела
+    + move_bullets(cur_time: __int64_t): void // перемещение пуль
+    + draw(window: sf::RenderWindow, cur_time: __int64_t): void // отрисовка оружия на экране
+    + upgrade(cur_time: __int64_t): void // улучшение оружия
+    + get_magazine_info(): std::pair<std::size_t, std::size_t> // получение информации о патронах в магазине
+    + get_gun_info(): std::size_t // получение информации об оружии
+    + get_spread(): float // получение разброса при стрельбе
+    + get_damage(): int // получение урона от выстрела
+    + change_damage(delta_damage: int): void // изменение урона от выстрела
+    + get_recharge_time(): std::size_t // получение времени перезарядки
+    + get_bullets(): std::pair<std::vector<Bullet>::iterator, std::vector<Bullet>::iterator> // получение списка пуль
+    + add_magazine(): void // добавление магазина патронов
+    + change_recharge_time(delta_time: __int64_t): void // изменение времени перезарядки
+    + change_spread(delta_spread: float): void // изменение разброса при стрельбе
+    + start_presentation_animation(cur_time: __int64_t): void // запуск анимации презентации
+    + set_animation(fire_anim: Animation, recharge_anim: Animation, presentation_anim: Animation): void // установка анимаций для оружия
+    + load_data(): void // загрузка данных для оружия
+}
+struct Animation
+{
+}
+struct Bullet
+{
+}
+
+Gun "1" *-- "1" Animation
+Gun "1" *-- "many" Bullet

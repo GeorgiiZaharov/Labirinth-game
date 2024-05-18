@@ -1,45 +1,65 @@
 @startuml
-object Animation {
-    tex: sf::Texture*
-    sound: sf::Sound
-    h: float
-    w: float
-    num_sprites: std::size_t
-    cur_sprite_num: std::size_t
-    time_for_change: __int64_t
-    last_time: __int64_t
-    sprites: std::vector<sf::Sprite>
-    running: bool
-    is_looped: bool
-    with_sound: bool
+
+struct Bullet {
+    - was_collision: bool // флаг коллизии с объектом
+    - dx: float // скорость по оси X
+    - dy: float // скорость по оси Y
+    - speed: int // скорость движения пули
+    - last_time: __int64_t // время последнего обновления
+    - sprite: sf::Sprite // спрайт пули
+
+    + get_rect(): sf::FloatRect // метод получения прямоугольника пули
+    + move(cur_time: __int64_t): void // метод перемещения пули
+    + draw(window: sf::RenderWindow): void // метод отрисовки пули
+    + get_collision(): bool // метод получения флага коллизии
+    + getGlobalBounds(): sf::FloatRect // метод получения глобальных границ пули
+    + get_direct(): sf::Vector2f // метод получения направления движения пули
+    + collision(): void // метод обработки столкновения
 }
 
-object Bomb {
-    activate: bool
-    w: int
-    h: int
-    planting_time: __int64_t
-    start_plant_time: __int64_t
-    plant_duration: __int64_t
-    last_bomb_pos: sf::Vector2f
-    wait_anim: Animation
+struct Animation {
+    - tex: sf::Texture * // указатель на текстуру анимации
+    - sound: sf::Sound // звук анимации
+    - h: float // высота спрайта
+    - w: float // ширина спрайта
+    - num_sprites: std::size_t // количество спрайтов в анимации
+    - cur_sprite_num: std::size_t // номер текущего спрайта
+    - time_for_change: __int64_t // время смены спрайта
+    - last_time: __int64_t // время последнего обновления
+    - sprites: std::vector<sf::Sprite> // вектор спрайтов анимации
+    - running: bool // флаг запуска анимации
+    - is_looped: bool // флаг цикличности анимации
+    - with_sound: bool // флаг наличия звука анимации
+
+    + start_animation(cur_time: __int64_t): void // метод запуска анимации
+    + resize_animation(pos: sf::FloatRect): void // метод изменения размера анимации
+    + is_running(): bool // метод проверки запущена ли анимация
+    + get_sprite(cur_time: __int64_t): sf::Sprite // метод получения спрайта анимации
 }
 
-object Bullet {
-    was_collision: bool
-    dx: float
-    dy: float
-    speed: int
-    last_time: __int64_t
-    sprite: sf::Sprite
+struct HealthBar {
+    - healthBar: sf::RectangleShape // прямоугольник шкалы здоровья
+    - border: sf::RectangleShape // граница шкалы здоровья
+    - cur_pos: sf::FloatRect // текущая позиция шкалы здоровья
+    - max_health: int // максимальное значение здоровья
+
+    + set_health(cur_health: int): void // метод установки текущего здоровья
+    + set_max_health(new_max_health: int): void // метод установки максимального здоровья
+    + move(bias_x: float, bias_y: float): void // метод перемещения шкалы здоровья
+    + draw(window: sf::RenderWindow): void // метод отрисовки шкалы здоровья
 }
 
-object Button {
-    big_pos: sf::FloatRect
-    small_pos: sf::FloatRect
-    pressed: bool
-    text: sf::Text
-    big_sprite: sf::Sprite
-    small_sprite: sf::Sprite
+struct Button {
+    - big_pos: sf::FloatRect // большой прямоугольник кнопки
+    - small_pos: sf::FloatRect // маленький прямоугольник кнопки
+    - pressed: bool // флаг нажатия кнопки
+    - text: sf::Text // текст кнопки
+    - big_sprite: sf::Sprite // спрайт большого прямоугольника кнопки
+    - small_sprite: sf::Sprite // спрайт маленького прямоугольника кнопки
+
+    + Button() // конструктор по умолчанию
+    + Button(pos: sf::FloatRect, str: std::string, color: sf::Color = sf::Color::White) // конструктор с параметрами
+    + try_to_press(mousePos: sf::Vector2f): void // метод попытки нажатия кнопки
+    + is_pressed(): bool // метод проверки нажатия кнопки
+    + loadResources(): bool // метод загрузки ресурсов кнопки
 }
-@enduml
