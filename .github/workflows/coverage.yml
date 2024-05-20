@@ -26,7 +26,7 @@ jobs:
       run: |
         cd tests
         make
-        xvfb-run -a ./test_suite
+        xvfb-run -a ./bin/test_suite
 
     - name: Generate coverage report
       run: |

@@ -7,6 +7,7 @@ LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -pthread
 # Directories
 SRCDIR = ..
 BUILDDIR = build
+BINDIR = bin
 TESTDIR = .
 
 # Source files
@@ -16,12 +17,13 @@ OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 TEST_OBJS = $(TEST_SRCS:$(TESTDIR)/%.cpp=$(BUILDDIR)/%.o)
 
 # Executable
-TARGET = test_suite
+TARGET = $(BINDIR)/test_suite
 
 # Rules
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(TEST_OBJS)
+	@mkdir -p $(BINDIR)
 	$(CXX) $(LDFLAGS) -o $@ $^ external/googletest/build/lib/libgtest.a external/googletest/build/lib/libgtest_main.a $(LIBS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
@@ -33,6 +35,6 @@ $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BUILDDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info
+	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info
 
 .PHONY: all clean
