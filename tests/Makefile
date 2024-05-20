@@ -8,6 +8,7 @@ LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -pthread
 SRCDIR = ..
 BUILDDIR = build
 TESTDIR = .
+GTEST_DIR = external/googletest/build
 
 # Source files
 SRCS = $(filter-out $(SRCDIR)/main.cpp, $(wildcard $(SRCDIR)/*.cpp))
@@ -22,7 +23,7 @@ TARGET = test_suite
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(TEST_OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^ /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $^ $(GTEST_DIR)/lib/libgtest.a $(GTEST_DIR)/lib/libgtest_main.a $(LIBS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
@@ -30,7 +31,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 
 $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -isystem $(GTEST_DIR)/include -c $< -o $@
 
 clean:
 	rm -rf $(BUILDDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info
