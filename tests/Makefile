@@ -1,4 +1,3 @@
-# Compiler and flags
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lgcov --coverage
 
@@ -39,3 +38,4 @@ clean:
 	rm -rf $(BUILDDIR) $(TARGET)
 
 .PHONY: all clean
+

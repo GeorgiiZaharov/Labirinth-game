@@ -1,0 +1,32 @@
+name: Coverage
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: sudo apt-get install lcov
+
+    - name: Compile and run tests
+      run: |
+        make test_suite
+        ./test_suite
+
+    - name: Generate coverage report
+      run: |
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' 'tests/*' --output-file coverage.info
+        lcov --list coverage.info
+
+    - name: Upload coverage to Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: |
+        pip3 install coveralls-lcov
+        coveralls-lcov coverage.info
