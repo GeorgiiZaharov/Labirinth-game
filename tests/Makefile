@@ -1,5 +1,8 @@
+# Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lgcov --coverage
+CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -fprofile-arcs -ftest-coverage
+LDFLAGS = -fprofile-arcs -ftest-coverage
+LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -pthread
 
 # Directories
 SRCDIR = ..
@@ -12,11 +15,6 @@ TEST_SRCS = $(wildcard $(TESTDIR)/*.cpp)
 OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 TEST_OBJS = $(TEST_SRCS:$(TESTDIR)/%.cpp=$(BUILDDIR)/%.o)
 
-# Libraries
-LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -lgtest -lgtest_main 
-GTEST_LIBS = /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a
-GTEST_FLAGS = -pthread -lgcov --coverage
-
 # Executable
 TARGET = test_suite
 
@@ -24,7 +22,7 @@ TARGET = test_suite
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(TEST_OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(GTEST_LIBS) $(LIBS) $(GTEST_FLAGS)
+	$(CXX) $(LDFLAGS) -o $@ $^ /usr/local/lib/libgtest.a /usr/local/lib/libgtest_main.a $(LIBS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
@@ -35,7 +33,6 @@ $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BUILDDIR) $(TARGET)
+	rm -rf $(BUILDDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info
 
 .PHONY: all clean
-
