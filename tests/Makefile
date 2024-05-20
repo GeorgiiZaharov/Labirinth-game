@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -fprofile-arcs -ftest-coverage
+CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -I./external/googletest/googletest/include -fprofile-arcs -ftest-coverage
 LDFLAGS = -fprofile-arcs -ftest-coverage
 LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -pthread
 
@@ -8,7 +8,6 @@ LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -pthread
 SRCDIR = ..
 BUILDDIR = build
 TESTDIR = .
-GTEST_DIR = external/googletest/build
 
 # Source files
 SRCS = $(filter-out $(SRCDIR)/main.cpp, $(wildcard $(SRCDIR)/*.cpp))
@@ -23,7 +22,7 @@ TARGET = test_suite
 all: $(TARGET)
 
 $(TARGET): $(OBJS) $(TEST_OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^ $(GTEST_DIR)/lib/libgtest.a $(GTEST_DIR)/lib/libgtest_main.a $(LIBS)
+	$(CXX) $(LDFLAGS) -o $@ $^ external/googletest/build/lib/libgtest.a external/googletest/build/lib/libgtest_main.a $(LIBS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
@@ -31,7 +30,7 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 
 $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
-	$(CXX) $(CXXFLAGS) -isystem $(GTEST_DIR)/include -c $< -o $@
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(BUILDDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info
