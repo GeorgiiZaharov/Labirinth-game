@@ -19,7 +19,7 @@ jobs:
         cd /usr/src/googletest
         sudo cmake .
         sudo make
-        sudo cp googletest/lib/libgtest*.a /usr/local/lib/
+        sudo cp lib/*.a /usr/local/lib/
 
     - name: Compile and run tests
       run: |
