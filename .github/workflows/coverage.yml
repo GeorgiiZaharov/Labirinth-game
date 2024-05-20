@@ -7,35 +7,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Install dependencies
-      run: sudo apt-get install -y lcov g++ cmake
+      run: sudo apt-get update && sudo apt-get install -y libsfml-dev lcov cmake
 
-    - name: Install Google Test
+    - name: Setup GoogleTest
       run: |
-        sudo apt-get install -y libgtest-dev
         cd /usr/src/googletest
         sudo cmake .
         sudo make
-        sudo cp lib/*.a /usr/local/lib/
+        sudo cp lib/libgtest*.a /usr/lib
 
-    - name: Compile and run tests
+    - name: Build project
+      run: make -C tests
+
+    - name: Run tests
       run: |
         cd tests
-        make
         ./test_suite
 
-    - name: Generate coverage report
+    - name: Generate coverage info
       run: |
+        cd tests
         lcov --capture --directory . --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' 'tests/*' --output-file coverage.info
-        lcov --list coverage.info
 
-    - name: Upload coverage to Coveralls
-      env:
-        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-      run: |
-        pip3 install coveralls-lcov
-        coveralls-lcov coverage.info
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      with:
+        files: tests/coverage.info
+        flags: unittests
+        name: codecov-umbrella
