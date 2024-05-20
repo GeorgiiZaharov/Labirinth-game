@@ -48,6 +48,53 @@ void Board::build(void)
 	// генерируем рандомный лабиринт
 	dfs(0, 0);
 }
+void Board::dfs(int w, int h)
+{
+	if (is_go_abroad(w, h)) return;			// если поступили некорректные координаты прекращаем построение
+	was.insert(std::make_pair(w, h));		// отметились что побывали
+	while (true)
+	{	
+		std::vector<std::pair<int, int>> v;			// находим все варианты куда можем пойти
+		if (!is_go_abroad(w, h + 1) && !was.count(std::make_pair(w, h + 1))) v.push_back(std::make_pair(0, 1));
+		if (!is_go_abroad(w + 1, h) && !was.count(std::make_pair(w + 1, h))) v.push_back(std::make_pair(1, 0));
+		if (!is_go_abroad(w, h - 1) && !was.count(std::make_pair(w, h - 1))) v.push_back(std::make_pair(0, -1));
+		if (!is_go_abroad(w - 1, h) && !was.count(std::make_pair(w - 1, h))) v.push_back(std::make_pair(-1, 0));
+
+		if (v.size() == 0) break;		//были везде в округе
+
+		int choice = random() % v.size();		// выбираем куда идти
+		int delta_w = v[choice].first, delta_h = v[choice].second;		// запоминаем направление
+
+		this->graph[std::make_pair(h, w)].push_back(std::make_pair(h + delta_h, w + delta_w));	// добавляем вершины в граф
+		this->graph[std::make_pair(h + delta_h, w + delta_w)].push_back(std::make_pair(h, w));	// добавляем вершины в граф
+
+		// в зависимости от направления удаляем стенки следующего и текущего
+		if (delta_h == 1)
+		{
+			cells[h + delta_h][w + delta_w].is_up = false;
+			cells[h][w].is_down = false;
+		}
+		else if (delta_w == 1)
+		{
+			cells[h + delta_h][w + delta_w].is_left = false;
+			cells[h][w].is_right = false;
+		}
+		else if (delta_h == -1)
+		{
+			cells[h + delta_h][w + delta_w].is_down = false;
+			cells[h][w].is_up = false;
+		}
+		else if (delta_w == -1)
+		{
+			cells[h + delta_h][w + delta_w].is_right = false;
+			cells[h][w].is_left = false;
+		}
+		v.clear();
+
+		dfs(w + delta_w, h + delta_h);
+	}
+}
+
 
 float Board::get_people_size(void) const
 {
@@ -114,51 +161,6 @@ std::vector<std::pair<int, int>> Board::navigator(const sf::Vector2i& index_from
 	return result;
 }
 
-void Board::dfs(int w, int h)
-{
-	was.insert(std::make_pair(w, h));		// отметились что побывали
-	while (true)
-	{	
-		std::vector<std::pair<int, int>> v;			// находим все варианты куда можем пойти
-		if (!is_go_abroad(w, h + 1) && !was.count(std::make_pair(w, h + 1))) v.push_back(std::make_pair(0, 1));
-		if (!is_go_abroad(w + 1, h) && !was.count(std::make_pair(w + 1, h))) v.push_back(std::make_pair(1, 0));
-		if (!is_go_abroad(w, h - 1) && !was.count(std::make_pair(w, h - 1))) v.push_back(std::make_pair(0, -1));
-		if (!is_go_abroad(w - 1, h) && !was.count(std::make_pair(w - 1, h))) v.push_back(std::make_pair(-1, 0));
-
-		if (v.size() == 0) break;		//были везде в округе
-
-		int choice = random() % v.size();		// выбираем куда идти
-		int delta_w = v[choice].first, delta_h = v[choice].second;		// запоминаем направление
-
-		this->graph[std::make_pair(h, w)].push_back(std::make_pair(h + delta_h, w + delta_w));	// добавляем вершины в граф
-		this->graph[std::make_pair(h + delta_h, w + delta_w)].push_back(std::make_pair(h, w));	// добавляем вершины в граф
-
-		// в зависимости от направления удаляем стенки следующего и текущего
-		if (delta_h == 1)
-		{
-			cells[h + delta_h][w + delta_w].is_up = false;
-			cells[h][w].is_down = false;
-		}
-		else if (delta_w == 1)
-		{
-			cells[h + delta_h][w + delta_w].is_left = false;
-			cells[h][w].is_right = false;
-		}
-		else if (delta_h == -1)
-		{
-			cells[h + delta_h][w + delta_w].is_down = false;
-			cells[h][w].is_up = false;
-		}
-		else if (delta_w == -1)
-		{
-			cells[h + delta_h][w + delta_w].is_right = false;
-			cells[h][w].is_left = false;
-		}
-		v.clear();
-
-		dfs(w + delta_w, h + delta_h);
-	}
-}
 
 void Board::draw(sf::RenderWindow& window, __int64_t cur_time)
 {

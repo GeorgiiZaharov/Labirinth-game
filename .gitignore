@@ -1,1 +1,4 @@
 sfml-app
+./tests/test_suite
+./tests/build
+./tests/bin

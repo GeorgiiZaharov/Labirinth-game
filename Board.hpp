@@ -2,13 +2,25 @@
 #define BOARD_HPP
 
 #include "includes.hpp"
+#include <gtest/gtest.h>
 
 #include "Cell.hpp"
 #include "Bullet.hpp"
 
+// class BoardNavigationTest;
+// class BoardDFSTest;
 
 class Board
 {
+
+    // Дружественные объявления для тестов
+    FRIEND_TEST(BoardNavigationTest, FindPathBetweenVertices);
+    FRIEND_TEST(BoardNavigationTest, DepthLimit);
+    FRIEND_TEST(BoardNavigationTest, NoPathExists);
+    FRIEND_TEST(BoardDFSTest, CorrectAlgorithmTermination);
+    FRIEND_TEST(BoardDFSTest, GraphVerticesAddedCorrectly);
+    FRIEND_TEST(BoardDFSTest, IncorrectCoordinatesHandling);
+
 public:
 	/*
     * ===================================================
@@ -64,13 +76,13 @@ public:
 	// Для введенного прямоугольника с направлением рассчитывает позицию где он находится
 	sf::Vector2i calc_pos_on_board(const sf::FloatRect& obj_pos, const sf::Vector2f& direct);
 
+// private:
+	// нужно для построения лабиринта
+	void dfs(int w=0, int h=0);
 
-private:
 	// Проверяет выход за границы поля
 	bool is_go_abroad(int w, int h) const;
 
-	// нужно для построения лабиринта
-	void dfs(int w=0, int h=0);
 	std::size_t n, m;
 	int screen_w, screen_h;
 	float cell_w, cell_h, border_width;
