@@ -16,10 +16,10 @@ jobs:
     - name: Install Google Test
       run: |
         sudo apt-get install -y libgtest-dev
-        cd /usr/src/gtest
-        sudo cmake CMakeLists.txt
+        cd /usr/src/googletest
+        sudo cmake .
         sudo make
-        sudo cp *.a /usr/local/lib
+        sudo cp googletest/lib/*.a /usr/local/lib
 
     - name: Compile and run tests
       run: |
@@ -38,4 +38,4 @@ jobs:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
         pip3 install coveralls-lcov
-        coveralls-lcov coverage.info
+        coveralls-lcov cov
