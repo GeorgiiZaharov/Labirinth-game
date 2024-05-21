@@ -44,12 +44,18 @@ jobs:
         run: |
           cd tests
           gcovr -r .. --exclude-directories 'external/*' --xml -o coverage.xml
+          gcovr -r .. --exclude-directories 'external/*' --html --html-details -o coverage.html
+
+      - name: Show coverage report
+        run: cat tests/coverage.xml
 
       - name: Install coveralls
         run: pip install coveralls
 
-      - name: Coveralls
-        run: coveralls -t ${{ secrets.coveralls_token }} --root . -E ".*external.*" -E ".*tests.*"
+      - name: Upload coverage to Coveralls
+        run: coveralls --root . -E ".*external.*" -E ".*tests.*"
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.coveralls_token }}
 
   sonarcloud-check:
     needs: gtest-tests
