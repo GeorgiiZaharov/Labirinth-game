@@ -17,7 +17,7 @@ jobs:
           git submodule update
 
       - name: Install dependencies
-        run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev
+        run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev xvfb
 
       - name: Build Google Test
         run: |
@@ -32,10 +32,10 @@ jobs:
           cd tests
           make all
 
-      - name: Run tests
+      - name: Run tests with Xvfb
         run: |
           cd tests
-          ./bin/test_suite
+          xvfb-run -a ./bin/test_suite
 
       - name: Install gcovr
         run: pip install gcovr==5.0
@@ -93,7 +93,7 @@ jobs:
       - name: Run tests to generate coverage statistics
         run: |
           cd tests
-          ./bin/test_suite
+          xvfb-run -a ./bin/test_suite
 
       - name: Collect coverage into one XML report
         run: |
@@ -103,7 +103,7 @@ jobs:
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_REPO_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
             --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
