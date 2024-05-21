@@ -6,15 +6,23 @@ is_right(true),
 is_down(true),
 is_left(true)
 {
+	// Подготваливаем изображения, масштабируем их в заданном отношениии
 	sf::FloatRect pos;
-	pos = sf::FloatRect(x, 
-		y, 
-		cell_w, 
-		cell_h
+	// Готовим задний фон => полностью масштабируем изображение
+	rec.setTexture(bg_tex);
+	pos = rec.getGlobalBounds();
+	rec.setScale(
+		cell_w / pos.width,
+		cell_h / pos.height
 	);
-	pruning(rec, bg_tex, pos);
+	rec.setPosition(x, y);
+
+	// готовим анимацию
 	boom_anim = Animation(boom_tex, boom_sound, cell_h, cell_w, 3, 100, false);
 
+	// настраиваем изображения для стен
+	// Алгоритм: 
+	// 		- вырезает соразмерный кусок из текстуры и масшатбирует его (см. pruning)
 	pos = sf::FloatRect(x,
 		y, 
 		cell_w, 
