@@ -43,7 +43,7 @@ jobs:
           PULSE_SERVER=/dev/null xvfb-run -a ./bin/test_suite
           lcov --capture --directory . --output-file coverage.info --base-directory /home/georgii/Projects/Labs
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
-          genhtml coverage.info --output-directory out
+          genhtml coverage.info --output-directory out --prefix /home/georgii/Projects/Labs
 
       - name: Install coveralls
         run: npm install -g coveralls
