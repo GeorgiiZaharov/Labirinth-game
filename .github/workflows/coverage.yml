@@ -41,18 +41,17 @@ jobs:
         run: |
           cd tests
           xvfb-run -a ./bin/test_suite
-          lcov --capture --directory . --output-file coverage.info --base-directory ..
+          lcov --capture --directory . --output-file coverage.info
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           genhtml coverage.info --output-directory out
 
-      - name: Show coverage report
-        run: cat tests/coverage.info
-
       - name: Install coveralls
-        run: pip install coveralls
+        run: npm install -g coveralls
 
       - name: Upload coverage to Coveralls
-        run: cat coverage.info | coveralls --repo-token ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          cat coverage.info | coveralls --repo-token ${{ secrets.COVERALLS_REPO_TOKEN }}
+          rm coverage.info
 
   sonarcloud-check:
     needs: gtest-tests
