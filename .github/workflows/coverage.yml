@@ -40,7 +40,7 @@ jobs:
       - name: Generate coverage report with lcov
         run: |
           cd tests
-          xvfb-run --no-sound -a ./bin/test_suite
+          xvfb-run -a ./bin/test_suite > /dev/null 2>&1
           lcov --capture --directory ./bin --output-file coverage.info
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           lcov --remove coverage.info '/external/*' --output-file coverage.info
