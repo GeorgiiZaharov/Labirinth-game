@@ -11,7 +11,8 @@ BINDIR = bin
 TESTDIR = .
 
 # Source files
-SRCS = $(filter-out $(SRCDIR)/main.cpp, $(wildcard $(SRCDIR)/*.cpp))
+# SRCS = $(filter-out $(SRCDIR)/main.cpp, $(wildcard $(SRCDIR)/*.cpp))
+SRCS=$(SRCDIR)/Board.cpp $(SRCDIR)/Animation.cpp $(SRCDIR)/Cell.cpp $(SRCDIR)/Bullet.cpp $(SRCDIR)/Bomb.cpp
 TEST_SRCS = $(wildcard $(TESTDIR)/*.cpp)
 OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 TEST_OBJS = $(TEST_SRCS:$(TESTDIR)/%.cpp=$(BUILDDIR)/%.o)
