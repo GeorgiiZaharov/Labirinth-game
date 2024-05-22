@@ -43,6 +43,10 @@ jobs:
   sonarcloud-analysis:
     runs-on: ubuntu-latest
     needs: gtest-tests
+    env:
+      SONAR_SCANNER_VERSION: 4.6.2.2472
+      SONAR_SERVER_URL: "https://sonarcloud.io"
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -73,10 +77,9 @@ jobs:
 
       - name: Download and set up SonarCloud scanner
         run: |
-          curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+          curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
           unzip sonar-scanner-cli.zip
-          mv sonar-scanner-4.6.2.2472-linux sonar-scanner
-          export PATH="${PATH}:${{ github.workspace }}/sonar-scanner/bin"
+          export PATH="${PATH}:${{ github.workspace }}/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin"
 
       - name: Download and set up build-wrapper
         run: |
@@ -86,7 +89,7 @@ jobs:
 
       - name: Run build-wrapper
         run: |
-          ${{ github.workspace }}/build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make -C tests
+          ${{ github.workspace }}/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make -C tests
 
       - name: Run tests to generate coverage statistics
         run: |
@@ -103,6 +106,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_REPO_TOKEN }}
         run: |
-          ${{ github.workspace }}/sonar-scanner/bin/sonar-scanner \
+          ${{ github.workspace }}/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin/sonar-scanner \
             --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
             --define sonar.coverageReportPaths=tests/coverage.xml
