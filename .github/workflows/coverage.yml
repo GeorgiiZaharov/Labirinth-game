@@ -41,9 +41,12 @@ jobs:
         run: |
           cd tests
           xvfb-run -a ./bin/test_suite
-          lcov --capture --directory . --output-file coverage.info
+          lcov --capture --directory . --output-file coverage.info --base-directory ..
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           genhtml coverage.info --output-directory out
+
+      - name: Show coverage report
+        run: cat tests/coverage.info
 
       - name: Install coveralls
         run: pip install coveralls
