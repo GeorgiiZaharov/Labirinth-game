@@ -29,6 +29,7 @@ jobs:
           cd build
           cmake ..
           make
+          ls -la build/lib
 
       - name: Build project and tests
         run: |
