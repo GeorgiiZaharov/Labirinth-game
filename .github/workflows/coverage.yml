@@ -68,9 +68,12 @@ jobs:
           pip install gcovr==5.0 # 5.1 is not supported
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v2
+      - name: Create build-wrapper output directory
+        run: mkdir -p "${{ env.BUILD_WRAPPER_OUT_DIR }}/tests"
       - name: Run build-wrapper
         run: |
-          build-wrapper-linux-x86-64 --out-dir "${{ env.BUILD_WRAPPER_OUT_DIR }}/tests" make
+          cd tests
+          build-wrapper-linux-x86-64 --out-dir "${{ env.BUILD_WRAPPER_OUT_DIR }}" make test_suite
       - name: Run tests to generate coverage statistics
         run: |
           cd tests
@@ -84,5 +87,9 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Put the name of your token here
         run: |
           sonar-scanner \
-            --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
-            --define sonar.coverageReportPaths=coverage.xml
+            -Dsonar.projectKey=GeorgiiZaharov_Project42 \
+            -Dsonar.organization=GerogiiZaharov \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
+            -Dsonar.coverageReportPaths=coverage.xml
