@@ -71,12 +71,22 @@ jobs:
       - name: Install gcovr
         run: pip install gcovr==5.0
 
-      - name: Install sonar-scanner and build-wrapper
-        uses: SonarSource/sonarcloud-github-c-cpp@v2
+      - name: Download and set up SonarCloud scanner
+        run: |
+          curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+          unzip sonar-scanner-cli.zip
+          mv sonar-scanner-4.6.2.2472-linux sonar-scanner
+          export PATH="${PATH}:${{ github.workspace }}/sonar-scanner/bin"
+
+      - name: Download and set up build-wrapper
+        run: |
+          curl -sSLo build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
+          unzip build-wrapper-linux-x86.zip
+          export PATH="${PATH}:${{ github.workspace }}/build-wrapper-linux-x86"
 
       - name: Run build-wrapper
         run: |
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make -C tests
+          ${{ github.workspace }}/build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make -C tests
 
       - name: Run tests to generate coverage statistics
         run: |
@@ -93,6 +103,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_REPO_TOKEN }}
         run: |
-          sonar-scanner \
+          ${{ github.workspace }}/sonar-scanner/bin/sonar-scanner \
             --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
             --define sonar.coverageReportPaths=tests/coverage.xml
