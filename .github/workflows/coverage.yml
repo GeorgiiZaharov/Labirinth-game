@@ -40,7 +40,7 @@ jobs:
       - name: Generate coverage report with lcov
         run: |
           cd tests
-          xvfb-run -a ./bin/test_suite
+          PULSE_SERVER=/dev/null xvfb-run -a ./bin/test_suite
           lcov --capture --directory . --output-file coverage.info --base-directory /home/georgii/Projects/Labs
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
           genhtml coverage.info --output-directory out
