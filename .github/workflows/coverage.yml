@@ -40,7 +40,10 @@ jobs:
       - name: Generate coverage report with lcov
         run: |
           cd tests
-          make coveralls
+          xvfb-run -a ./bin/test_suite
+          lcov --capture --directory . --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          genhtml coverage.info --output-directory out
           # xvfb-run -a ./bin/test_suite
           # lcov --capture --directory "${{ github.workspace }}/tests/bin" --output-file coverage.info
           # lcov --remove coverage.info '/usr/*' --output-file coverage.info
