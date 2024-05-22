@@ -27,8 +27,9 @@ jobs:
           cd tests/external/googletest
           mkdir -p build
           cd build
-          cmake ..
+          cmake .. -DCMAKE_INSTALL_PREFIX=../../../../external/googletest/build
           make
+          make install
 
       - name: Build project and tests
         run: |
