@@ -41,8 +41,10 @@ jobs:
         run: |
           cd tests
           xvfb-run -a ./bin/test_suite
-          lcov --capture --directory . --output-file coverage.info
+          lcov --capture --directory ./bin --output-file coverage.info
           lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --remove coverage.info '/external/*' --output-file coverage.info
+
           genhtml coverage.info --output-directory out
 
       - name: Install coveralls
