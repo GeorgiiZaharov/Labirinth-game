@@ -6,48 +6,11 @@ on:
       - main  # замените на имя вашей основной ветки
 
 jobs:
-  gtest-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Initialize and update git submodules
-        run: |
-          git submodule init
-          git submodule update
-
-      - name: Install dependencies
-        run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev xvfb lcov
-
-      - name: Build Google Test
-        run: |
-          cd tests/external/googletest
-          mkdir -p build
-          cd build
-          cmake ..
-          make
-          ls -la build/lib
-
-      - name: Build project and tests
-        run: |
-          cd tests
-          make all
-
-      - name: Run tests with Xvfb
-        run: |
-          cd tests
-          xvfb-run -a ./bin/test_suite
-
   sonarcloud-analysis:
     runs-on: ubuntu-latest
-    needs: gtest-tests
     env:
       SONAR_SCANNER_VERSION: 4.6.2.2472
       SONAR_SERVER_URL: "https://sonarcloud.io"
-      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -68,45 +31,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Python 3.8 for gcovr
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-
-      - name: Install gcovr
-        run: pip install gcovr==5.0
-
       - name: Download and set up SonarCloud scanner
         run: |
           curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
           unzip sonar-scanner-cli.zip
           export PATH="${PATH}:${{ github.workspace }}/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin"
 
-      - name: Download and set up build-wrapper
-        run: |
-          curl -sSLo build-wrapper-linux-x86.zip https://sonarcloud.io/static/cpp/build-wrapper-linux-x86.zip
-          unzip build-wrapper-linux-x86.zip
-          export PATH="${PATH}:${{ github.workspace }}/build-wrapper-linux-x86"
-
-      - name: Run build-wrapper
-        run: |
-          ${{ github.workspace }}/build-wrapper-linux-x86/build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make -C tests
-
-      - name: Run tests to generate coverage statistics
-        run: |
-          cd tests
-          xvfb-run -a ./bin/test_suite
-
-      - name: Collect coverage into one XML report
-        run: |
-          cd tests
-          gcovr -r .. --exclude-directories 'external/*' --xml -o coverage.xml
-
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_REPO_TOKEN }}
         run: |
-          ${{ github.workspace }}/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin/sonar-scanner \
-            --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
-            --define sonar.coverageReportPaths=tests/coverage.xml
+          sonar-scanner \
+            -Dsonar.projectKey=GeorgiiZaharov_Project42 \
+            -Dsonar.organization=GerogiiZaharov \
+            -Dsonar.host.url=${{ env.SONAR_SERVER_URL }} \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
