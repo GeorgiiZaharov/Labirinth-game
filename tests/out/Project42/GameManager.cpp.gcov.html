@@ -1,0 +1,558 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage.info - Project42/GameManager.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">Project42</a> - GameManager.cpp<span style="font-size: 80%;"> (source / <a href="GameManager.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">248</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2024-05-22 17:59:26</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">11</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;GameManager.hpp&quot;</a>
+<a name="2"><span class="lineNum">       2 </span>            : </a>
+<a name="3"><span class="lineNum">       3 </span><span class="lineNoCov">          0 : GameManager::GameManager(sf::RenderWindow&amp; window)</span></a>
+<a name="4"><span class="lineNum">       4 </span><span class="lineNoCov">          0 : :window(window),</span></a>
+<a name="5"><span class="lineNum">       5 </span><span class="lineNoCov">          0 : board_width(4), </span></a>
+<a name="6"><span class="lineNum">       6 </span><span class="lineNoCov">          0 : board_height(3),</span></a>
+<a name="7"><span class="lineNum">       7 </span><span class="lineNoCov">          0 : cur_level(1),</span></a>
+<a name="8"><span class="lineNum">       8 </span><span class="lineNoCov">          0 : num_models_of_enemy(2),</span></a>
+<a name="9"><span class="lineNum">       9 </span><span class="lineNoCov">          0 : need_shoot(false),</span></a>
+<a name="10"><span class="lineNum">      10 </span><span class="lineNoCov">          0 : move_direct_x(0.0f), move_direct_y(0.0f),</span></a>
+<a name="11"><span class="lineNum">      11 </span><span class="lineNoCov">          0 : panel(sf::FloatRect(window.getSize().x - 250, 0, 250, window.getSize().y), window)</span></a>
+<a name="12"><span class="lineNum">      12 </span>            : {</a>
+<a name="13"><span class="lineNum">      13 </span>            :         // загружаем статическиe переменные для работы классов</a>
+<a name="14"><span class="lineNum">      14 </span><span class="lineNoCov">          0 :         if (!AKR::loadResources())</span></a>
+<a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 :                 std::cout &lt;&lt; &quot;AKR load failed\n&quot;;</span></a>
+<a name="16"><span class="lineNum">      16 </span>            : </a>
+<a name="17"><span class="lineNum">      17 </span><span class="lineNoCov">          0 :         if (!M416::loadResources())</span></a>
+<a name="18"><span class="lineNum">      18 </span><span class="lineNoCov">          0 :                 std::cout &lt;&lt; &quot;M416 load failed\n&quot;;</span></a>
+<a name="19"><span class="lineNum">      19 </span>            : </a>
+<a name="20"><span class="lineNum">      20 </span><span class="lineNoCov">          0 :         if (!Desert_eagle::loadResources())</span></a>
+<a name="21"><span class="lineNum">      21 </span><span class="lineNoCov">          0 :                 std::cout &lt;&lt; &quot;Desert eagle load failed\n&quot;;</span></a>
+<a name="22"><span class="lineNum">      22 </span>            : </a>
+<a name="23"><span class="lineNum">      23 </span><span class="lineNoCov">          0 :         if (!Board::loadResources())</span></a>
+<a name="24"><span class="lineNum">      24 </span><span class="lineNoCov">          0 :                 std::cout &lt;&lt; &quot;BOARD load failed\n&quot;;</span></a>
+<a name="25"><span class="lineNum">      25 </span>            : </a>
+<a name="26"><span class="lineNum">      26 </span><span class="lineNoCov">          0 :         if (!Hero::loadResources())</span></a>
+<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 :                 std::cout &lt;&lt; &quot;HERO load failed\n&quot;;</span></a>
+<a name="28"><span class="lineNum">      28 </span>            : </a>
+<a name="29"><span class="lineNum">      29 </span><span class="lineNoCov">          0 :         if (!Enemy::loadResources())</span></a>
+<a name="30"><span class="lineNum">      30 </span><span class="lineNoCov">          0 :                 std::cout &lt;&lt; &quot;ENEMY load failed\n&quot;;</span></a>
+<a name="31"><span class="lineNum">      31 </span>            : </a>
+<a name="32"><span class="lineNum">      32 </span><span class="lineNoCov">          0 :         if (!Bomb::loadResources())</span></a>
+<a name="33"><span class="lineNum">      33 </span><span class="lineNoCov">          0 :                 std::cout &lt;&lt; &quot;Bomb load failed\n&quot;;</span></a>
+<a name="34"><span class="lineNum">      34 </span>            :         // определение переменных</a>
+<a name="35"><span class="lineNum">      35 </span>            :         // определяем игровое поле (изначально оно на весь экран)todo</a>
+<a name="36"><span class="lineNum">      36 </span><span class="lineNoCov">          0 :         sf::Vector2u window_size = window.getSize();</span></a>
+<a name="37"><span class="lineNum">      37 </span><span class="lineNoCov">          0 :         sf::FloatRect board_pos(0, 0, window_size.x - 250, window_size.y);</span></a>
+<a name="38"><span class="lineNum">      38 </span><span class="lineNoCov">          0 :         b = Board(board_pos);</span></a>
+<a name="39"><span class="lineNum">      39 </span><span class="lineNoCov">          0 :         h = Hero();</span></a>
+<a name="40"><span class="lineNum">      40 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="41"><span class="lineNum">      41 </span><span class="lineNoCov">          0 : void GameManager::run(void)</span></a>
+<a name="42"><span class="lineNum">      42 </span>            : {</a>
+<a name="43"><span class="lineNum">      43 </span><span class="lineNoCov">          0 :         while (h.alive())</span></a>
+<a name="44"><span class="lineNum">      44 </span>            :         {</a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :                 init();                 // генерируем новый уровень</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :                 while (h.alive() &amp;&amp; alive_enemies != 0)</span></a>
+<a name="47"><span class="lineNum">      47 </span>            :                 {</a>
+<a name="48"><span class="lineNum">      48 </span>            :                         // ввод</a>
+<a name="49"><span class="lineNum">      49 </span><span class="lineNoCov">          0 :                         input();</span></a>
+<a name="50"><span class="lineNum">      50 </span>            :                         // обработка</a>
+<a name="51"><span class="lineNum">      51 </span><span class="lineNoCov">          0 :                         treatment();</span></a>
+<a name="52"><span class="lineNum">      52 </span>            :                         // вывод</a>
+<a name="53"><span class="lineNum">      53 </span><span class="lineNoCov">          0 :                         output();</span></a>
+<a name="54"><span class="lineNum">      54 </span>            :                 }</a>
+<a name="55"><span class="lineNum">      55 </span><span class="lineNoCov">          0 :                 new_level();            // усложняет уровень</span></a>
+<a name="56"><span class="lineNum">      56 </span>            :         }</a>
+<a name="57"><span class="lineNum">      57 </span>            :         // вывод результата игры todo</a>
+<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="59"><span class="lineNum">      59 </span>            : // обрабатывает ввод пользователя</a>
+<a name="60"><span class="lineNum">      60 </span><span class="lineNoCov">          0 : void GameManager::input(void)</span></a>
+<a name="61"><span class="lineNum">      61 </span>            : {</a>
+<a name="62"><span class="lineNum">      62 </span>            :         // слушаем события</a>
+<a name="63"><span class="lineNum">      63 </span>            :     sf::Event event;</a>
+<a name="64"><span class="lineNum">      64 </span><span class="lineNoCov">          0 :     while (window.pollEvent(event))</span></a>
+<a name="65"><span class="lineNum">      65 </span>            :     {</a>
+<a name="66"><span class="lineNum">      66 </span><span class="lineNoCov">          0 :         switch (event.type)</span></a>
+<a name="67"><span class="lineNum">      67 </span>            :         {</a>
+<a name="68"><span class="lineNum">      68 </span>            :         // отслеживание закрытия окна</a>
+<a name="69"><span class="lineNum">      69 </span><span class="lineNoCov">          0 :         case sf::Event::Closed:</span></a>
+<a name="70"><span class="lineNum">      70 </span><span class="lineNoCov">          0 :                 h.suicide();</span></a>
+<a name="71"><span class="lineNum">      71 </span><span class="lineNoCov">          0 :                 window.close();</span></a>
+<a name="72"><span class="lineNum">      72 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="73"><span class="lineNum">      73 </span>            :         // отслеживание нажатия кнопок</a>
+<a name="74"><span class="lineNum">      74 </span><span class="lineNoCov">          0 :         case sf::Event::KeyPressed:</span></a>
+<a name="75"><span class="lineNum">      75 </span><span class="lineNoCov">          0 :                 switch (event.key.code)</span></a>
+<a name="76"><span class="lineNum">      76 </span>            :                 {</a>
+<a name="77"><span class="lineNum">      77 </span>            :             // нажатие кнопок перемещения персонажа (WASD)</a>
+<a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 :                 case sf::Keyboard::W:</span></a>
+<a name="79"><span class="lineNum">      79 </span><span class="lineNoCov">          0 :                 move_direct_y = -1.0f;</span></a>
+<a name="80"><span class="lineNum">      80 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="81"><span class="lineNum">      81 </span><span class="lineNoCov">          0 :             case sf::Keyboard::D:</span></a>
+<a name="82"><span class="lineNum">      82 </span><span class="lineNoCov">          0 :                 move_direct_x = 1.0f;</span></a>
+<a name="83"><span class="lineNum">      83 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="84"><span class="lineNum">      84 </span><span class="lineNoCov">          0 :             case sf::Keyboard::S:</span></a>
+<a name="85"><span class="lineNum">      85 </span><span class="lineNoCov">          0 :                 move_direct_y = 1.0f;</span></a>
+<a name="86"><span class="lineNum">      86 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="87"><span class="lineNum">      87 </span><span class="lineNoCov">          0 :             case sf::Keyboard::A:</span></a>
+<a name="88"><span class="lineNum">      88 </span><span class="lineNoCov">          0 :                 move_direct_x = -1.0f;</span></a>
+<a name="89"><span class="lineNum">      89 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="90"><span class="lineNum">      90 </span>            :                 // отслеживаем нажатие кнопки 'B'</a>
+<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 :             case sf::Keyboard::B:</span></a>
+<a name="92"><span class="lineNum">      92 </span><span class="lineNoCov">          0 :                     h.planting(clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="93"><span class="lineNum">      93 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="94"><span class="lineNum">      94 </span>            :             // отсележиваем нажатие пробела</a>
+<a name="95"><span class="lineNum">      95 </span><span class="lineNoCov">          0 :             case sf::Keyboard::Space:</span></a>
+<a name="96"><span class="lineNum">      96 </span><span class="lineNoCov">          0 :                 make_board_boom();</span></a>
+<a name="97"><span class="lineNum">      97 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="98"><span class="lineNum">      98 </span><span class="lineNoCov">          0 :             default: </span></a>
+<a name="99"><span class="lineNum">      99 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="100"><span class="lineNum">     100 </span>            :                 }</a>
+<a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="102"><span class="lineNum">     102 </span>            :         // отслеживание отпускания клавиш</a>
+<a name="103"><span class="lineNum">     103 </span><span class="lineNoCov">          0 :         case sf::Event::KeyReleased:</span></a>
+<a name="104"><span class="lineNum">     104 </span><span class="lineNoCov">          0 :                 switch (event.key.code)</span></a>
+<a name="105"><span class="lineNum">     105 </span>            :                 {</a>
+<a name="106"><span class="lineNum">     106 </span><span class="lineNoCov">          0 :                         case sf::Keyboard::W:</span></a>
+<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 :                         move_direct_y = 0.0f;</span></a>
+<a name="108"><span class="lineNum">     108 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="109"><span class="lineNum">     109 </span><span class="lineNoCov">          0 :                     case sf::Keyboard::D:</span></a>
+<a name="110"><span class="lineNum">     110 </span><span class="lineNoCov">          0 :                         move_direct_x = 0.0f;</span></a>
+<a name="111"><span class="lineNum">     111 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 :                     case sf::Keyboard::S:</span></a>
+<a name="113"><span class="lineNum">     113 </span><span class="lineNoCov">          0 :                         move_direct_y = 0.0f;</span></a>
+<a name="114"><span class="lineNum">     114 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="115"><span class="lineNum">     115 </span><span class="lineNoCov">          0 :                     case sf::Keyboard::A:</span></a>
+<a name="116"><span class="lineNum">     116 </span><span class="lineNoCov">          0 :                         move_direct_x = 0.0f;</span></a>
+<a name="117"><span class="lineNum">     117 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="118"><span class="lineNum">     118 </span>            :                         // отслеживание отпускания кнопки 'B'</a>
+<a name="119"><span class="lineNum">     119 </span><span class="lineNoCov">          0 :                     case sf::Keyboard::B:</span></a>
+<a name="120"><span class="lineNum">     120 </span><span class="lineNoCov">          0 :                         h.drop_planting();</span></a>
+<a name="121"><span class="lineNum">     121 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="122"><span class="lineNum">     122 </span><span class="lineNoCov">          0 :                     default:</span></a>
+<a name="123"><span class="lineNum">     123 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="124"><span class="lineNum">     124 </span>            :                 }</a>
+<a name="125"><span class="lineNum">     125 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="126"><span class="lineNum">     126 </span>            :         // отслеживание нажатия кнопки мыши</a>
+<a name="127"><span class="lineNum">     127 </span><span class="lineNoCov">          0 :         case sf::Event::MouseButtonPressed:</span></a>
+<a name="128"><span class="lineNum">     128 </span><span class="lineNoCov">          0 :                 switch (event.mouseButton.button)</span></a>
+<a name="129"><span class="lineNum">     129 </span>            :                 {</a>
+<a name="130"><span class="lineNum">     130 </span>            :                 // левой кнопи</a>
+<a name="131"><span class="lineNum">     131 </span><span class="lineNoCov">          0 :                 case (sf::Mouse::Left):</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :                         if (!panel.try_press_button(h))</span></a>
+<a name="133"><span class="lineNum">     133 </span>            :                         {</a>
+<a name="134"><span class="lineNum">     134 </span><span class="lineNoCov">          0 :                                 need_shoot = true;</span></a>
+<a name="135"><span class="lineNum">     135 </span>            :                         }</a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :                 default: </span></a>
+<a name="138"><span class="lineNum">     138 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="139"><span class="lineNum">     139 </span>            :                 }</a>
+<a name="140"><span class="lineNum">     140 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="141"><span class="lineNum">     141 </span>            :         // отслеживание отпускания кнопки мыши</a>
+<a name="142"><span class="lineNum">     142 </span><span class="lineNoCov">          0 :         case sf::Event::MouseButtonReleased:</span></a>
+<a name="143"><span class="lineNum">     143 </span><span class="lineNoCov">          0 :                 switch (event.mouseButton.button)</span></a>
+<a name="144"><span class="lineNum">     144 </span>            :                 {</a>
+<a name="145"><span class="lineNum">     145 </span>            :                 // левой кнопи</a>
+<a name="146"><span class="lineNum">     146 </span><span class="lineNoCov">          0 :                 case (sf::Mouse::Left):</span></a>
+<a name="147"><span class="lineNum">     147 </span><span class="lineNoCov">          0 :                         need_shoot = false;</span></a>
+<a name="148"><span class="lineNum">     148 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="149"><span class="lineNum">     149 </span><span class="lineNoCov">          0 :                 default: </span></a>
+<a name="150"><span class="lineNum">     150 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="151"><span class="lineNum">     151 </span>            :                 }</a>
+<a name="152"><span class="lineNum">     152 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="153"><span class="lineNum">     153 </span><span class="lineNoCov">          0 :         default:</span></a>
+<a name="154"><span class="lineNum">     154 </span><span class="lineNoCov">          0 :                 break;</span></a>
+<a name="155"><span class="lineNum">     155 </span>            :         }</a>
+<a name="156"><span class="lineNum">     156 </span>            :     }</a>
+<a name="157"><span class="lineNum">     157 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="158"><span class="lineNum">     158 </span>            : </a>
+<a name="159"><span class="lineNum">     159 </span>            : // делает обработку ввода</a>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 : void GameManager::treatment(void)</span></a>
+<a name="161"><span class="lineNum">     161 </span>            : {</a>
+<a name="162"><span class="lineNum">     162 </span>            :         // эксплуатируем hero</a>
+<a name="163"><span class="lineNum">     163 </span>            :         // разворачиваемся в нужном направлении</a>
+<a name="164"><span class="lineNum">     164 </span><span class="lineNoCov">          0 :         sf::Vector2i mousePos = sf::Mouse::getPosition(window);</span></a>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 :     sf::Vector2f globalMousePos = window.mapPixelToCoords(mousePos);</span></a>
+<a name="166"><span class="lineNum">     166 </span><span class="lineNoCov">          0 :     h.aim(globalMousePos.x, globalMousePos.y);</span></a>
+<a name="167"><span class="lineNum">     167 </span>            : </a>
+<a name="168"><span class="lineNum">     168 </span>            :     // передвигаемся в соответсвии с нажатыми клавишами</a>
+<a name="169"><span class="lineNum">     169 </span><span class="lineNoCov">          0 :     __int64_t cur_time = clock.getElapsedTime().asMilliseconds();</span></a>
+<a name="170"><span class="lineNum">     170 </span><span class="lineNoCov">          0 :     h.moving(</span></a>
+<a name="171"><span class="lineNum">     171 </span>            :         cur_time,</a>
+<a name="172"><span class="lineNum">     172 </span>            :         move_direct_x,</a>
+<a name="173"><span class="lineNum">     173 </span>            :         move_direct_y</a>
+<a name="174"><span class="lineNum">     174 </span>            :     );</a>
+<a name="175"><span class="lineNum">     175 </span>            :     // если происходит пересечение хитбокса с картой =&gt; откатываемся</a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineNoCov">          0 :     if (b.check_collision(h.get_hitbox()))</span></a>
+<a name="177"><span class="lineNum">     177 </span>            :     {</a>
+<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :         h.moving(</span></a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :                 cur_time + (cur_time - last_hero_moving_time),</span></a>
+<a name="180"><span class="lineNum">     180 </span><span class="lineNoCov">          0 :                 -move_direct_x,</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineNoCov">          0 :                 -move_direct_y</span></a>
+<a name="182"><span class="lineNum">     182 </span>            :         );</a>
+<a name="183"><span class="lineNum">     183 </span>            :     }</a>
+<a name="184"><span class="lineNum">     184 </span><span class="lineNoCov">          0 :     last_hero_moving_time = cur_time;</span></a>
+<a name="185"><span class="lineNum">     185 </span>            : </a>
+<a name="186"><span class="lineNum">     186 </span>            :     // стреляем если была нажата кнопка мыши (не на кнопки)</a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 :     if (need_shoot)</span></a>
+<a name="188"><span class="lineNum">     188 </span>            :     {</a>
+<a name="189"><span class="lineNum">     189 </span><span class="lineNoCov">          0 :         h.shooting(clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="190"><span class="lineNum">     190 </span>            :     }</a>
+<a name="191"><span class="lineNum">     191 </span>            : </a>
+<a name="192"><span class="lineNum">     192 </span>            :     // обновляем патроны в оружии</a>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 :     h.upgrade_gun(clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="194"><span class="lineNum">     194 </span>            : </a>
+<a name="195"><span class="lineNum">     195 </span>            :     // эксплуатируем персонажей игры</a>
+<a name="196"><span class="lineNum">     196 </span>            :     // находим позицию hero на board</a>
+<a name="197"><span class="lineNum">     197 </span><span class="lineNoCov">          0 :     sf::Vector2i hero_cor = b.calc_pos_on_board(h.get_hitbox());</span></a>
+<a name="198"><span class="lineNum">     198 </span>            :     // даем enemy из enemies представление об окружающей ситуации</a>
+<a name="199"><span class="lineNum">     199 </span><span class="lineNoCov">          0 :     for (auto &amp;enemy : enemies)</span></a>
+<a name="200"><span class="lineNum">     200 </span>            :     {</a>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 :         sf::Vector2i enemy_cor = b.calc_pos_on_board(enemy.get_hitbox(), enemy.get_direct());</span></a>
+<a name="202"><span class="lineNum">     202 </span><span class="lineNoCov">          0 :         enemy.set_path_to_hero(b.navigator(enemy_cor, hero_cor));</span></a>
+<a name="203"><span class="lineNum">     203 </span><span class="lineNoCov">          0 :         enemy.set_cooridinate(enemy_cor);</span></a>
+<a name="204"><span class="lineNum">     204 </span><span class="lineNoCov">          0 :         enemy.set_hero_pos(h.get_hitbox());</span></a>
+<a name="205"><span class="lineNum">     205 </span>            :     }</a>
+<a name="206"><span class="lineNum">     206 </span>            :     // целемся стреляем двигаемся при необходимости</a>
+<a name="207"><span class="lineNum">     207 </span><span class="lineNoCov">          0 :     for (auto &amp;enemy : enemies)</span></a>
+<a name="208"><span class="lineNum">     208 </span>            :     {</a>
+<a name="209"><span class="lineNum">     209 </span><span class="lineNoCov">          0 :         enemy.aim();</span></a>
+<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 :         enemy.shooting(clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="211"><span class="lineNum">     211 </span><span class="lineNoCov">          0 :         enemy.moving(clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="212"><span class="lineNum">     212 </span><span class="lineNoCov">          0 :         enemy.upgrade_gun(clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="213"><span class="lineNum">     213 </span>            :     }</a>
+<a name="214"><span class="lineNum">     214 </span>            : </a>
+<a name="215"><span class="lineNum">     215 </span>            :     // делаем файтинг</a>
+<a name="216"><span class="lineNum">     216 </span>            :     // проверяем столкновение enemy с пулями hero</a>
+<a name="217"><span class="lineNum">     217 </span><span class="lineNoCov">          0 :     auto hero_bullets = h.get_bullets();</span></a>
+<a name="218"><span class="lineNum">     218 </span><span class="lineNoCov">          0 :     for (auto i = hero_bullets.first; i != hero_bullets.second; ++i)</span></a>
+<a name="219"><span class="lineNum">     219 </span>            :     {</a>
+<a name="220"><span class="lineNum">     220 </span>            :         // если есть пересечение c врагом</a>
+<a name="221"><span class="lineNum">     221 </span><span class="lineNoCov">          0 :         for (auto &amp;enemy : enemies)</span></a>
+<a name="222"><span class="lineNum">     222 </span>            :         {</a>
+<a name="223"><span class="lineNum">     223 </span><span class="lineNoCov">          0 :                 if (enemy.alive() &amp;&amp; enemy.check_collision(*i, clock.getElapsedTime().asMilliseconds()))</span></a>
+<a name="224"><span class="lineNum">     224 </span>            :                 {</a>
+<a name="225"><span class="lineNum">     225 </span>            :                         // уменьшаем текущее здоровье врага на урон hero</a>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 :                         enemy.change_cur_health(- h.get_damage());</span></a>
+<a name="227"><span class="lineNum">     227 </span><span class="lineNoCov">          0 :                         if (!enemy.alive()) // если после попадания enemy умер</span></a>
+<a name="228"><span class="lineNum">     228 </span>            :                         {</a>
+<a name="229"><span class="lineNum">     229 </span><span class="lineNoCov">          0 :                                 h.change_cash(enemy.get_cost());                // увеличиваем cash персонажа на его цену</span></a>
+<a name="230"><span class="lineNum">     230 </span><span class="lineNoCov">          0 :                                         --alive_enemies;                                        // количестов живых врагов уменьшили</span></a>
+<a name="231"><span class="lineNum">     231 </span>            :                         }</a>
+<a name="232"><span class="lineNum">     232 </span>            :                 }</a>
+<a name="233"><span class="lineNum">     233 </span>            :         }</a>
+<a name="234"><span class="lineNum">     234 </span>            :     }</a>
+<a name="235"><span class="lineNum">     235 </span>            : </a>
+<a name="236"><span class="lineNum">     236 </span>            :     // проверяем столкновение hero c пулями enemy</a>
+<a name="237"><span class="lineNum">     237 </span><span class="lineNoCov">          0 :         for (auto &amp;enemy : enemies)</span></a>
+<a name="238"><span class="lineNum">     238 </span>            :         {</a>
+<a name="239"><span class="lineNum">     239 </span><span class="lineNoCov">          0 :                 auto enemy_bullets = enemy.get_bullets();</span></a>
+<a name="240"><span class="lineNum">     240 </span><span class="lineNoCov">          0 :                 for (auto i = enemy_bullets.first; i != enemy_bullets.second; ++i)</span></a>
+<a name="241"><span class="lineNum">     241 </span>            :                 {</a>
+<a name="242"><span class="lineNum">     242 </span><span class="lineNoCov">          0 :                         __int64_t cur_time = clock.getElapsedTime().asMilliseconds();</span></a>
+<a name="243"><span class="lineNum">     243 </span>            :                         // если прошло более 2 секунд сначала игры</a>
+<a name="244"><span class="lineNum">     244 </span><span class="lineNoCov">          0 :                         if (cur_time - survival_start_time &gt;= 2000)</span></a>
+<a name="245"><span class="lineNum">     245 </span>            :                         {</a>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 :                         if (h.check_collision(*i, cur_time))    // смотрим пересечение с пулей</span></a>
+<a name="247"><span class="lineNum">     247 </span>            :                         {</a>
+<a name="248"><span class="lineNum">     248 </span><span class="lineNoCov">          0 :                                 h.change_cur_health(- enemy.get_damage());</span></a>
+<a name="249"><span class="lineNum">     249 </span>            :                         }</a>
+<a name="250"><span class="lineNum">     250 </span>            :                 }</a>
+<a name="251"><span class="lineNum">     251 </span>            :                 }</a>
+<a name="252"><span class="lineNum">     252 </span>            :         }</a>
+<a name="253"><span class="lineNum">     253 </span>            :         // ПРОВЕРКА СТОЛКНОВЕНИЙ ПУЛЬ СО СТЕНАМИ ЛАБИРИНТА</a>
+<a name="254"><span class="lineNum">     254 </span>            :         // проверяем столкновение пуль hero со стенами лабиринта</a>
+<a name="255"><span class="lineNum">     255 </span><span class="lineNoCov">          0 :         for (auto i = hero_bullets.first; i != hero_bullets.second; ++i)</span></a>
+<a name="256"><span class="lineNum">     256 </span>            :         {</a>
+<a name="257"><span class="lineNum">     257 </span><span class="lineNoCov">          0 :                 b.check_collision(*i);</span></a>
+<a name="258"><span class="lineNum">     258 </span>            :         }</a>
+<a name="259"><span class="lineNum">     259 </span>            :         // проверка столкновения пуль enemies со стенами лабиринта</a>
+<a name="260"><span class="lineNum">     260 </span><span class="lineNoCov">          0 :         for (auto &amp;enemy : enemies)</span></a>
+<a name="261"><span class="lineNum">     261 </span>            :         {</a>
+<a name="262"><span class="lineNum">     262 </span><span class="lineNoCov">          0 :                 auto enemy_bullets = enemy.get_bullets();</span></a>
+<a name="263"><span class="lineNum">     263 </span><span class="lineNoCov">          0 :                 for (auto i = enemy_bullets.first; i != enemy_bullets.second; ++i)</span></a>
+<a name="264"><span class="lineNum">     264 </span>            :                 {</a>
+<a name="265"><span class="lineNum">     265 </span><span class="lineNoCov">          0 :                         b.check_collision(*i);</span></a>
+<a name="266"><span class="lineNum">     266 </span>            :                 }</a>
+<a name="267"><span class="lineNum">     267 </span>            :         }</a>
+<a name="268"><span class="lineNum">     268 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="269"><span class="lineNum">     269 </span>            : </a>
+<a name="270"><span class="lineNum">     270 </span>            : // выводит изменения</a>
+<a name="271"><span class="lineNum">     271 </span><span class="lineNoCov">          0 : void GameManager::output(void)</span></a>
+<a name="272"><span class="lineNum">     272 </span>            : {</a>
+<a name="273"><span class="lineNum">     273 </span><span class="lineNoCov">          0 :         window.clear();</span></a>
+<a name="274"><span class="lineNum">     274 </span><span class="lineNoCov">          0 :         b.draw(window, clock.getElapsedTime().asMilliseconds());                // рисуем игровое поле</span></a>
+<a name="275"><span class="lineNum">     275 </span>            : </a>
+<a name="276"><span class="lineNum">     276 </span>            :         // вычисляем координаты мыши</a>
+<a name="277"><span class="lineNum">     277 </span><span class="lineNoCov">          0 :         sf::Vector2i mousePos = sf::Mouse::getPosition(window);</span></a>
+<a name="278"><span class="lineNum">     278 </span><span class="lineNoCov">          0 :     sf::Vector2f globalMousePos = window.mapPixelToCoords(mousePos);</span></a>
+<a name="279"><span class="lineNum">     279 </span>            : </a>
+<a name="280"><span class="lineNum">     280 </span><span class="lineNoCov">          0 :         if (is_hero(globalMousePos))    // если мышь наведена на hero</span></a>
+<a name="281"><span class="lineNum">     281 </span>            :         {</a>
+<a name="282"><span class="lineNum">     282 </span><span class="lineNoCov">          0 :                 panel.draw_people_info(h, clock.getElapsedTime().asMilliseconds());// выводим информацию о персонаже</span></a>
+<a name="283"><span class="lineNum">     283 </span>            :         }</a>
+<a name="284"><span class="lineNum">     284 </span><span class="lineNoCov">          0 :         else if (is_enemy(globalMousePos))      // если мышь наведена на enemy</span></a>
+<a name="285"><span class="lineNum">     285 </span>            :         {</a>
+<a name="286"><span class="lineNum">     286 </span><span class="lineNoCov">          0 :                 panel.draw_people_info(get_enemy(globalMousePos), clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="287"><span class="lineNum">     287 </span>            :         }</a>
+<a name="288"><span class="lineNum">     288 </span>            :         else            // если мышь ни на что не наведина</a>
+<a name="289"><span class="lineNum">     289 </span>            :         {</a>
+<a name="290"><span class="lineNum">     290 </span><span class="lineNoCov">          0 :                 panel.draw_shop(h, cur_level);// иначе, выводим магазин</span></a>
+<a name="291"><span class="lineNum">     291 </span>            :         }</a>
+<a name="292"><span class="lineNum">     292 </span><span class="lineNoCov">          0 :         for (auto &amp;enemy : enemies)</span></a>
+<a name="293"><span class="lineNum">     293 </span>            :         {</a>
+<a name="294"><span class="lineNum">     294 </span><span class="lineNoCov">          0 :                 enemy.draw(window, clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="295"><span class="lineNum">     295 </span>            :         }</a>
+<a name="296"><span class="lineNum">     296 </span><span class="lineNoCov">          0 :         h.draw(window, clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="297"><span class="lineNum">     297 </span>            :         // Отображаем содержимое окна на экране</a>
+<a name="298"><span class="lineNum">     298 </span><span class="lineNoCov">          0 :     window.display();</span></a>
+<a name="299"><span class="lineNum">     299 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="300"><span class="lineNum">     300 </span>            : </a>
+<a name="301"><span class="lineNum">     301 </span>            : // изменяет параметры</a>
+<a name="302"><span class="lineNum">     302 </span><span class="lineNoCov">          0 : void GameManager::new_level(void)</span></a>
+<a name="303"><span class="lineNum">     303 </span>            : {</a>
+<a name="304"><span class="lineNum">     304 </span>            :         // увеличиваем счетчик текущего уровня</a>
+<a name="305"><span class="lineNum">     305 </span><span class="lineNoCov">          0 :         ++cur_level;</span></a>
+<a name="306"><span class="lineNum">     306 </span>            :         // увеличиваем размер поля</a>
+<a name="307"><span class="lineNum">     307 </span><span class="lineNoCov">          0 :         ++board_width; ++board_height;</span></a>
+<a name="308"><span class="lineNum">     308 </span>            :         // чистим список врагов</a>
+<a name="309"><span class="lineNum">     309 </span><span class="lineNoCov">          0 :         enemies.clear();</span></a>
+<a name="310"><span class="lineNum">     310 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="311"><span class="lineNum">     311 </span>            : </a>
+<a name="312"><span class="lineNum">     312 </span>            : // по параметрам генерируем уровень</a>
+<a name="313"><span class="lineNum">     313 </span><span class="lineNoCov">          0 : void GameManager::init(void)</span></a>
+<a name="314"><span class="lineNum">     314 </span>            : {</a>
+<a name="315"><span class="lineNum">     315 </span>            :         // запоминаем время начала текщуего уровня</a>
+<a name="316"><span class="lineNum">     316 </span><span class="lineNoCov">          0 :         survival_start_time = clock.getElapsedTime().asMilliseconds();</span></a>
+<a name="317"><span class="lineNum">     317 </span>            : </a>
+<a name="318"><span class="lineNum">     318 </span>            :         // устанавливаем board_width клеток в ширину, board_height в высоту</a>
+<a name="319"><span class="lineNum">     319 </span><span class="lineNoCov">          0 :         b.set_board_size(board_width, board_height);</span></a>
+<a name="320"><span class="lineNum">     320 </span>            :         // генерируем лабиринт</a>
+<a name="321"><span class="lineNum">     321 </span><span class="lineNoCov">          0 :         b.build();</span></a>
+<a name="322"><span class="lineNum">     322 </span>            : </a>
+<a name="323"><span class="lineNum">     323 </span>            :         // обновляем размеры ячейки и получаем рекомендованный размер персонажа</a>
+<a name="324"><span class="lineNum">     324 </span><span class="lineNoCov">          0 :         people_size = b.get_people_size();</span></a>
+<a name="325"><span class="lineNum">     325 </span>            : </a>
+<a name="326"><span class="lineNum">     326 </span><span class="lineNoCov">          0 :         sf::Vector2f cell_size = b.get_cell_size();</span></a>
+<a name="327"><span class="lineNum">     327 </span><span class="lineNoCov">          0 :         cell_w = cell_size.x; cell_h = cell_size.y;</span></a>
+<a name="328"><span class="lineNum">     328 </span>            : </a>
+<a name="329"><span class="lineNum">     329 </span>            :         // расставляем врагов, так чтобы они находились в уникальных позициях</a>
+<a name="330"><span class="lineNum">     330 </span>            : </a>
+<a name="331"><span class="lineNum">     331 </span>            :         // ИНИЦИАЛИЗИРУЕМ ГЕНЕРАТОРО СЛУЧАЙНЫХ ЧИСЕЛ</a>
+<a name="332"><span class="lineNum">     332 </span>            :         // Создание объекта случайного устройства для получения истинно случайного начального значения</a>
+<a name="333"><span class="lineNum">     333 </span><span class="lineNoCov">          0 :     std::random_device rd;</span></a>
+<a name="334"><span class="lineNum">     334 </span>            :     // Создание объекта генератора случайных чисел с начальным значением от случайного устройства</a>
+<a name="335"><span class="lineNum">     335 </span><span class="lineNoCov">          0 :     std::mt19937 gen(rd());</span></a>
+<a name="336"><span class="lineNum">     336 </span>            :     // Создание объекта равномерного распределения от 0 до 2^16</a>
+<a name="337"><span class="lineNum">     337 </span><span class="lineNoCov">          0 :     std::uniform_int_distribution&lt;&gt; dis(0, 1 &lt;&lt; 16);</span></a>
+<a name="338"><span class="lineNum">     338 </span>            :     // ЗАКОНЧИЛИ ИНИЦИАЛИЗИРОВАТЬ ГЕНЕРАТОР</a>
+<a name="339"><span class="lineNum">     339 </span>            : </a>
+<a name="340"><span class="lineNum">     340 </span>            :     // расставляем врагов</a>
+<a name="341"><span class="lineNum">     341 </span>            :     int cur_row, cur_col;</a>
+<a name="342"><span class="lineNum">     342 </span><span class="lineNoCov">          0 :         std::set&lt;std::pair&lt;int, int&gt;&gt; enemies_positions; // сет со стартовыми позициями enemy</span></a>
+<a name="343"><span class="lineNum">     343 </span>            :         // количество врагов будет равно max(board_width, board_height)</a>
+<a name="344"><span class="lineNum">     344 </span><span class="lineNoCov">          0 :         for (std::size_t i = 0; i &lt; std::min(board_width, board_height); ++i)</span></a>
+<a name="345"><span class="lineNum">     345 </span>            :         {</a>
+<a name="346"><span class="lineNum">     346 </span><span class="lineNoCov">          0 :                 cur_row = dis(gen) % board_height;</span></a>
+<a name="347"><span class="lineNum">     347 </span><span class="lineNoCov">          0 :                 cur_col = dis(gen) % board_width;</span></a>
+<a name="348"><span class="lineNum">     348 </span>            :                 // до тех пор пока координата не уникальна продолжаем генерировать</a>
+<a name="349"><span class="lineNum">     349 </span>            :                 // также нельзя чтобы враг стоял в тойже ячейке что и hero</a>
+<a name="350"><span class="lineNum">     350 </span><span class="lineNoCov">          0 :                 while (0 != enemies_positions.count(std::make_pair(cur_row, cur_col)) || cur_row + cur_col == 0)</span></a>
+<a name="351"><span class="lineNum">     351 </span>            :                 {</a>
+<a name="352"><span class="lineNum">     352 </span><span class="lineNoCov">          0 :                         cur_row = dis(gen) % board_height;</span></a>
+<a name="353"><span class="lineNum">     353 </span><span class="lineNoCov">          0 :                         cur_col = dis(gen) % board_width;</span></a>
+<a name="354"><span class="lineNum">     354 </span>            :                 }</a>
+<a name="355"><span class="lineNum">     355 </span>            :                 // запоминаем новую уникальную позицию</a>
+<a name="356"><span class="lineNum">     356 </span><span class="lineNoCov">          0 :                 enemies_positions.insert(std::make_pair(cur_row, cur_col));</span></a>
+<a name="357"><span class="lineNum">     357 </span>            :                 // генерируем тип enemy</a>
+<a name="358"><span class="lineNum">     358 </span><span class="lineNoCov">          0 :                 int cur_num_model = dis(gen) % num_models_of_enemy;</span></a>
+<a name="359"><span class="lineNum">     359 </span>            :                 // вычисляем позицию на карте</a>
+<a name="360"><span class="lineNum">     360 </span>            :                 sf::FloatRect cur_enemy_pos(</a>
+<a name="361"><span class="lineNum">     361 </span><span class="lineNoCov">          0 :                         cur_col * cell_w + cell_w / 2 - people_size / 2,</span></a>
+<a name="362"><span class="lineNum">     362 </span><span class="lineNoCov">          0 :                         cur_row * cell_h + cell_h / 2 - people_size / 2,</span></a>
+<a name="363"><span class="lineNum">     363 </span>            :                         people_size,</a>
+<a name="364"><span class="lineNum">     364 </span>            :                         people_size</a>
+<a name="365"><span class="lineNum">     365 </span><span class="lineNoCov">          0 :                         );</span></a>
+<a name="366"><span class="lineNum">     366 </span>            : </a>
+<a name="367"><span class="lineNum">     367 </span>            :                 // заносим enemy в enemies</a>
+<a name="368"><span class="lineNum">     368 </span><span class="lineNoCov">          0 :                 enemies.emplace_back(cur_num_model);</span></a>
+<a name="369"><span class="lineNum">     369 </span>            :                 // устанавливаем в нужную позицию</a>
+<a name="370"><span class="lineNum">     370 </span><span class="lineNoCov">          0 :                 enemies[i].set_position(cur_enemy_pos);</span></a>
+<a name="371"><span class="lineNum">     371 </span>            : </a>
+<a name="372"><span class="lineNum">     372 </span>            :                 // в зависимости от типа enemy устанавливаем оружие и спрайт</a>
+<a name="373"><span class="lineNum">     373 </span><span class="lineNoCov">          0 :                 switch (cur_num_model)</span></a>
+<a name="374"><span class="lineNum">     374 </span>            :                 {</a>
+<a name="375"><span class="lineNum">     375 </span><span class="lineNoCov">          0 :                 case 0:</span></a>
+<a name="376"><span class="lineNum">     376 </span><span class="lineNoCov">          0 :                         enemies[i].set_weapon(AKR(people_size * 1 / 4, people_size * 1 / 2, people_size * 1 / 2));</span></a>
+<a name="377"><span class="lineNum">     377 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="378"><span class="lineNum">     378 </span><span class="lineNoCov">          0 :                 case 1:</span></a>
+<a name="379"><span class="lineNum">     379 </span><span class="lineNoCov">          0 :                         enemies[i].set_weapon(Desert_eagle(people_size * 1 / 4, people_size * 1 / 2, people_size * 1 / 2));</span></a>
+<a name="380"><span class="lineNum">     380 </span><span class="lineNoCov">          0 :                         break;</span></a>
+<a name="381"><span class="lineNum">     381 </span>            :                 }</a>
+<a name="382"><span class="lineNum">     382 </span>            :         }</a>
+<a name="383"><span class="lineNum">     383 </span>            : </a>
+<a name="384"><span class="lineNum">     384 </span><span class="lineNoCov">          0 :         alive_enemies = enemies.size();         // считаем количество живых врагов, изначально макс.</span></a>
+<a name="385"><span class="lineNum">     385 </span>            : </a>
+<a name="386"><span class="lineNum">     386 </span>            :         // устанавливаем hero </a>
+<a name="387"><span class="lineNum">     387 </span><span class="lineNoCov">          0 :         h.set_position(sf::FloatRect(</span></a>
+<a name="388"><span class="lineNum">     388 </span><span class="lineNoCov">          0 :                 cell_w / 2 - people_size / 2,</span></a>
+<a name="389"><span class="lineNum">     389 </span><span class="lineNoCov">          0 :                 cell_h / 2 - people_size / 2,</span></a>
+<a name="390"><span class="lineNum">     390 </span>            :                 people_size, </a>
+<a name="391"><span class="lineNum">     391 </span>            :                 people_size)</a>
+<a name="392"><span class="lineNum">     392 </span>            :         );</a>
+<a name="393"><span class="lineNum">     393 </span>            : </a>
+<a name="394"><span class="lineNum">     394 </span><span class="lineNoCov">          0 :         h.set_weapon(M416(people_size / 4, people_size / 2, people_size / 2));</span></a>
+<a name="395"><span class="lineNum">     395 </span><span class="lineNoCov">          0 :         h.boom();       // взрываем все установленные бомбы</span></a>
+<a name="396"><span class="lineNum">     396 </span><span class="lineNoCov">          0 :         h.add_bomb();</span></a>
+<a name="397"><span class="lineNum">     397 </span><span class="lineNoCov">          0 : }       </span></a>
+<a name="398"><span class="lineNum">     398 </span>            : </a>
+<a name="399"><span class="lineNum">     399 </span>            : // отвечает за взрыв поля</a>
+<a name="400"><span class="lineNum">     400 </span><span class="lineNoCov">          0 : void GameManager::make_board_boom(void)</span></a>
+<a name="401"><span class="lineNum">     401 </span>            : {</a>
+<a name="402"><span class="lineNum">     402 </span>            :         // получаем позиции бомбы на карте</a>
+<a name="403"><span class="lineNum">     403 </span><span class="lineNoCov">          0 :         std::vector&lt;sf::Vector2f&gt; bombs_pos = h.boom();</span></a>
+<a name="404"><span class="lineNum">     404 </span>            :         // для каждой позиции</a>
+<a name="405"><span class="lineNum">     405 </span><span class="lineNoCov">          0 :         for (auto bomb_pos : bombs_pos)</span></a>
+<a name="406"><span class="lineNum">     406 </span>            :         {</a>
+<a name="407"><span class="lineNum">     407 </span>            :                 // запишем это в виде sf::FloatRect</a>
+<a name="408"><span class="lineNum">     408 </span><span class="lineNoCov">          0 :                 sf::FloatRect bomb_rect(bomb_pos.x, bomb_pos.y, 0, 0);</span></a>
+<a name="409"><span class="lineNum">     409 </span>            :                 // получим список клеток, которые подпадают под взрыв</a>
+<a name="410"><span class="lineNum">     410 </span><span class="lineNoCov">          0 :                 std::vector&lt;std::pair&lt;int, int&gt;&gt; cell_cors = b.neighbour(bomb_rect);</span></a>
+<a name="411"><span class="lineNum">     411 </span>            :                 //считаем ячейку в которой находится hero</a>
+<a name="412"><span class="lineNum">     412 </span><span class="lineNoCov">          0 :                 sf::Vector2i hero_cor = b.calc_pos_on_board(h.get_hitbox());</span></a>
+<a name="413"><span class="lineNum">     413 </span>            :                 // просматриваем всех персонажей и проверяем принадлежность этим ячейкам</a>
+<a name="414"><span class="lineNum">     414 </span><span class="lineNoCov">          0 :                 for (auto cor : cell_cors)</span></a>
+<a name="415"><span class="lineNum">     415 </span>            :                 {</a>
+<a name="416"><span class="lineNum">     416 </span><span class="lineNoCov">          0 :                         for (auto &amp;enemy : enemies)</span></a>
+<a name="417"><span class="lineNum">     417 </span>            :                         {</a>
+<a name="418"><span class="lineNum">     418 </span>            :                                 // вычисляем координату enemy на доске</a>
+<a name="419"><span class="lineNum">     419 </span><span class="lineNoCov">          0 :                                 sf::Vector2i enemy_cor = b.calc_pos_on_board(enemy.get_hitbox());</span></a>
+<a name="420"><span class="lineNum">     420 </span><span class="lineNoCov">          0 :                                 if (cor.first == enemy_cor.x &amp;&amp; cor.second == enemy_cor.y &amp;&amp; enemy.alive())</span></a>
+<a name="421"><span class="lineNum">     421 </span>            :                                 {</a>
+<a name="422"><span class="lineNum">     422 </span><span class="lineNoCov">          0 :                                         enemy.change_cur_health(-Bomb::get_damage());// уменьшаем здоровье на урон бомбы</span></a>
+<a name="423"><span class="lineNum">     423 </span><span class="lineNoCov">          0 :                                         if (!enemy.alive())     // если враг умер</span></a>
+<a name="424"><span class="lineNum">     424 </span>            :                                         {</a>
+<a name="425"><span class="lineNum">     425 </span><span class="lineNoCov">          0 :                                                 h.change_cash(enemy.get_cost());        // увеличиваем cash на цену enemy</span></a>
+<a name="426"><span class="lineNum">     426 </span><span class="lineNoCov">          0 :                                                 --alive_enemies;                                        // количестов живых врагов уменьшили</span></a>
+<a name="427"><span class="lineNum">     427 </span>            :                                         }</a>
+<a name="428"><span class="lineNum">     428 </span>            :                                 }</a>
+<a name="429"><span class="lineNum">     429 </span>            :                         }</a>
+<a name="430"><span class="lineNum">     430 </span>            :                         // делаем тоже самое для hero</a>
+<a name="431"><span class="lineNum">     431 </span><span class="lineNoCov">          0 :                         if (cor.first == hero_cor.x &amp;&amp; cor.second == hero_cor.y)</span></a>
+<a name="432"><span class="lineNum">     432 </span>            :                         {</a>
+<a name="433"><span class="lineNum">     433 </span><span class="lineNoCov">          0 :                                 h.change_cur_health(-Bomb::get_damage());</span></a>
+<a name="434"><span class="lineNum">     434 </span>            :                         }</a>
+<a name="435"><span class="lineNum">     435 </span>            :                         // запускаем у текущей ячейки анимацию взрыва</a>
+<a name="436"><span class="lineNum">     436 </span><span class="lineNoCov">          0 :                         b.boom_cell(cor.first, cor.second, clock.getElapsedTime().asMilliseconds());</span></a>
+<a name="437"><span class="lineNum">     437 </span>            :                 }</a>
+<a name="438"><span class="lineNum">     438 </span>            :                 // взорвем ближайшую стену</a>
+<a name="439"><span class="lineNum">     439 </span><span class="lineNoCov">          0 :                 b.wall_destroyer(bomb_rect);</span></a>
+<a name="440"><span class="lineNum">     440 </span><span class="lineNoCov">          0 :         }</span></a>
+<a name="441"><span class="lineNum">     441 </span><span class="lineNoCov">          0 : }</span></a>
+<a name="442"><span class="lineNum">     442 </span>            : </a>
+<a name="443"><span class="lineNum">     443 </span>            : // проверяет наведена ли в данный момент мышка на hero</a>
+<a name="444"><span class="lineNum">     444 </span><span class="lineNoCov">          0 : bool GameManager::is_hero(const sf::Vector2f&amp; globalMousePos)</span></a>
+<a name="445"><span class="lineNum">     445 </span>            : {</a>
+<a name="446"><span class="lineNum">     446 </span><span class="lineNoCov">          0 :     if (h.intersection(globalMousePos))</span></a>
+<a name="447"><span class="lineNum">     447 </span>            :         {</a>
+<a name="448"><span class="lineNum">     448 </span><span class="lineNoCov">          0 :                 return true;</span></a>
+<a name="449"><span class="lineNum">     449 </span>            :         }</a>
+<a name="450"><span class="lineNum">     450 </span>            :         // если такого не нашли возращаем false</a>
+<a name="451"><span class="lineNum">     451 </span><span class="lineNoCov">          0 :     return false;</span></a>
+<a name="452"><span class="lineNum">     452 </span>            : }</a>
+<a name="453"><span class="lineNum">     453 </span>            : </a>
+<a name="454"><span class="lineNum">     454 </span>            : // проверяет наведена ли в данный момент мышка на enemy</a>
+<a name="455"><span class="lineNum">     455 </span><span class="lineNoCov">          0 : bool GameManager::is_enemy(const sf::Vector2f&amp; globalMousePos)</span></a>
+<a name="456"><span class="lineNum">     456 </span>            : {</a>
+<a name="457"><span class="lineNum">     457 </span>            :     // ищем персонажа на которого наведена мышь</a>
+<a name="458"><span class="lineNum">     458 </span><span class="lineNoCov">          0 :     for (auto &amp;enemy : enemies)</span></a>
+<a name="459"><span class="lineNum">     459 </span>            :     {</a>
+<a name="460"><span class="lineNum">     460 </span>            :         // произошло пересечение</a>
+<a name="461"><span class="lineNum">     461 </span><span class="lineNoCov">          0 :         if (enemy.intersection(globalMousePos))</span></a>
+<a name="462"><span class="lineNum">     462 </span>            :         {</a>
+<a name="463"><span class="lineNum">     463 </span><span class="lineNoCov">          0 :                 return true;</span></a>
+<a name="464"><span class="lineNum">     464 </span>            :         }</a>
+<a name="465"><span class="lineNum">     465 </span>            :     }</a>
+<a name="466"><span class="lineNum">     466 </span>            :         // если такого не нашли возращаем false</a>
+<a name="467"><span class="lineNum">     467 </span><span class="lineNoCov">          0 :     return false;</span></a>
+<a name="468"><span class="lineNum">     468 </span>            : }</a>
+<a name="469"><span class="lineNum">     469 </span>            : </a>
+<a name="470"><span class="lineNum">     470 </span><span class="lineNoCov">          0 : Enemy&amp; GameManager::get_enemy(const sf::Vector2f&amp; globalMousePos)</span></a>
+<a name="471"><span class="lineNum">     471 </span>            : {</a>
+<a name="472"><span class="lineNum">     472 </span>            :     // ищем персонажа на которого наведена мышь</a>
+<a name="473"><span class="lineNum">     473 </span><span class="lineNoCov">          0 :     for (auto &amp;enemy : enemies)</span></a>
+<a name="474"><span class="lineNum">     474 </span>            :     {</a>
+<a name="475"><span class="lineNum">     475 </span>            :         // произошло пересечение</a>
+<a name="476"><span class="lineNum">     476 </span><span class="lineNoCov">          0 :         if (enemy.intersection(globalMousePos))</span></a>
+<a name="477"><span class="lineNum">     477 </span>            :         {</a>
+<a name="478"><span class="lineNum">     478 </span><span class="lineNoCov">          0 :                 return enemy;</span></a>
+<a name="479"><span class="lineNum">     479 </span>            :         }</a>
+<a name="480"><span class="lineNum">     480 </span>            :     }</a>
+<a name="481"><span class="lineNum">     481 </span><span class="lineNoCov">          0 :     return enemies[0];</span></a>
+<a name="482"><span class="lineNum">     482 </span>            : }</a>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.14</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

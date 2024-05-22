@@ -253,6 +253,23 @@ TEST_F(BombTest, IgnorePlantingWhenActivated) {
     ASSERT_EQ(bomb.get_pos(), sf::Vector2f(initial_pos.left + initial_pos.width / 2, initial_pos.top + initial_pos.height / 2));
 }
 
+// Тест №5: Проверка корректного обновления plant_duration при не завершенной установке бомбы (позитивный)
+TEST_F(BombTest, PlantDurationUpdateWhenNotCompleted) {
+    // Устанавливаем бомбу на начальную позицию в начальное время
+    bomb.planting(initial_pos, initial_time);
+
+    // Время через 1000 миллисекунд после начального, проверяем что установка не завершена
+    __int64_t partial_time = initial_time + 1000;
+    bomb.planting(initial_pos, partial_time);
+
+    // Проверяем, что бомба не активирована и plant_duration обновляется корректно
+    ASSERT_FALSE(bomb.is_activate());
+
+    auto plant_info = bomb.get_plant_info();
+    ASSERT_EQ(plant_info.first, 1000); // Проверяем, что plant_duration = 1000 миллисекунд
+    ASSERT_LT(plant_info.first, plant_info.second); // Проверяем, что plant_duration < planting_time
+}
+
 // Запуск всех тестов
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);

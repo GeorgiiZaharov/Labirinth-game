@@ -37,4 +37,14 @@ $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 clean:
 	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info
 
+coverage: $(TARGET)
+	./$(TARGET)
+	lcov --capture --directory . --output-file coverage.info
+	lcov --remove coverage.info '/usr/*' --output-file coverage.info
+	genhtml coverage.info --output-directory out
+
+coveralls: coverage
+	cat coverage.info | coveralls --repo-token ${COVERALLS_REPO_TOKEN}
+
+
 .PHONY: all clean

@@ -19,17 +19,13 @@ void Bomb::planting(const sf::FloatRect& pos_obj, __int64_t cur_time)
     sf::Vector2f cur_bomb_pos(pos_obj.left + pos_obj.width / 2,
                               pos_obj.top + pos_obj.height / 2);
     // сравниваем текущее положение бомбы с предыдущим
-    if (cur_bomb_pos.x == last_bomb_pos.x && cur_bomb_pos.y == last_bomb_pos.y)
+    if (cur_bomb_pos == last_bomb_pos)
     { // если они равны (бомба не передвигалась)
-        if (cur_time - start_plant_time >= planting_time)
+        plant_duration = cur_time - start_plant_time;   // пересчитываем сколько мы устанавливали бомбу
+        if (plant_duration >= planting_time)       // прошло ли достаточно времени
         {
             activate = true;                        // устанавливаем бомбу
             wait_anim.start_animation(cur_time);    // запускаем анимацию
-            plant_duration = 0;                     // начинаем показывать спрайты с начала
-        }
-        else
-        {
-            plant_duration = cur_time - start_plant_time;
         }
     }
     else // если же передвигалась
