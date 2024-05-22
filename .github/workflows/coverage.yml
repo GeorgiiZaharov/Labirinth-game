@@ -1,6 +1,9 @@
 name: CI/CD GitHub Actions
 
-on: [push]
+on:
+  push:
+    branches:
+      - main  # замените на имя вашей основной ветки
 
 jobs:
   gtest-tests:
@@ -37,29 +40,9 @@ jobs:
           cd tests
           xvfb-run -a ./bin/test_suite
 
-      - name: Generate coverage report with lcov
-        run: |
-          cd tests
-          PULSE_SERVER=/dev/null xvfb-run -a ./bin/test_suite
-          lcov --capture --directory . --output-file coverage.info --base-directory /home/georgii/Projects/Labs
-          lcov --remove coverage.info '/usr/*' --output-file coverage.info
-          genhtml coverage.info --output-directory out --prefix /home/georgii/Projects/Labs
-
-      - name: Install coveralls
-        run: npm install -g coveralls
-
-      - name: Upload coverage to Coveralls
-        run: |
-          cat coverage.info | coveralls --repo-token ${{ secrets.COVERALLS_REPO_TOKEN }}
-          rm coverage.info
-
-  sonarcloud-check:
-    needs: gtest-tests
+  sonarcloud-analysis:
     runs-on: ubuntu-latest
-    env:
-      SONAR_SCANNER_VERSION: 4.6.1.2450
-      SONAR_SERVER_URL: "https://sonarcloud.io"
-      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory
+    needs: gtest-tests
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
