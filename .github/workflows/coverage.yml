@@ -17,7 +17,7 @@ jobs:
           git submodule update
 
       - name: Install dependencies
-        run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev xvfb python3-pip
+        run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev xvfb lcov
 
       - name: Build Google Test
         run: |
@@ -37,25 +37,17 @@ jobs:
           cd tests
           xvfb-run -a ./bin/test_suite
 
-      - name: Install gcovr
-        run: pip3 install gcovr==5.0
-
-      - name: Generate coverage report
+      - name: Generate coverage report with lcov
         run: |
-          cd tests
-          gcovr -r .. --exclude-directories 'external/*' --xml -o coverage.xml
-          gcovr -r .. --exclude-directories 'external/*' --html --html-details -o coverage.html
-
-      - name: Show coverage report
-        run: cat tests/coverage.xml
+          lcov --capture --directory . --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          genhtml coverage.info --output-directory out
 
       - name: Install coveralls
-        run: pip3 install coveralls
+        run: pip install coveralls
 
       - name: Upload coverage to Coveralls
-        run: coveralls --root . -E ".*external.*" -E ".*tests.*"
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.coveralls_token }}
+        run: cat coverage.info | coveralls --repo-token ${{ secrets.COVERALLS_REPO_TOKEN }}
 
   sonarcloud-check:
     needs: gtest-tests
