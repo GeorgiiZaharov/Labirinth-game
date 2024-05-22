@@ -36,7 +36,7 @@ jobs:
           curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
           unzip sonar-scanner-cli.zip
           mv sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux sonar-scanner
-          export PATH="${PATH}:${{ github.workspace }}/sonar-scanner/bin"
+          echo "export PATH=\$PATH:$(pwd)/sonar-scanner/bin" >> $GITHUB_ENV
 
       - name: Run sonar-scanner
         env:
