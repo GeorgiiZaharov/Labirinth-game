@@ -6,11 +6,8 @@ on:
       - main  # замените на имя вашей основной ветки
 
 jobs:
-  sonarcloud-analysis:
+  gtest-tests:
     runs-on: ubuntu-latest
-    env:
-      SONAR_SCANNER_VERSION: 4.6.2.2472
-      SONAR_SERVER_URL: "https://sonarcloud.io"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -23,28 +20,69 @@ jobs:
           git submodule update
 
       - name: Install dependencies
-        run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev
+        run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev xvfb lcov
 
-      - name: Set up Java for SonarCloud
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Download and set up SonarCloud scanner
+      - name: Build Google Test
         run: |
-          curl -sSLo sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
-          unzip sonar-scanner-cli.zip
-          mv sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux sonar-scanner
-          echo "export PATH=\$PATH:$(pwd)/sonar-scanner/bin" >> $GITHUB_ENV
+          cd tests/external/googletest
+          mkdir -p build
+          cd build
+          cmake ..
+          make
 
+      - name: Build project and tests
+        run: |
+          cd tests
+          make all
+
+      - name: Run tests with Xvfb
+        run: |
+          cd tests
+          xvfb-run -a ./bin/test_suite
+
+    sonarcloud-check:
+    needs: gtest-tests
+    runs-on: ubuntu-latest
+    env:
+      SONAR_SCANNER_VERSION: 4.6.1.2450 # Find the latest version in the "Linux" link on this page:
+                                        # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
+      SONAR_SERVER_URL: "https://sonarcloud.io"
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+      - run: git submodule init
+      - run: git submodule update
+      - run: sudo apt-get update -y && sudo apt-get install -y g++ cmake libsfml-dev xvfb lcov
+      - name: Set up Python 3.8 for gcovr
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: install gcovr 5.0
+        run: |
+          pip install gcovr==5.0 # 5.1 is not supported
+      - name: Install sonar-scanner and build-wrapper
+        uses: SonarSource/sonarcloud-github-c-cpp@v2
+      - name: Run build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make
+      - name: Run tests to generate coverage statistics
+        run: |
+          cd tests
+          xvfb-run -a ./bin/test_suite
+      - name: Collect coverage into one XML report
+        run: |
+          gcovr --sonarqube > coverage.xml
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Put the name of your token here
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=GeorgiiZaharov_Project42 \
-            -Dsonar.organization=GerogiiZaharov \
-            -Dsonar.host.url=${{ env.SONAR_SERVER_URL }} \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
+            --define sonar.coverageReportPaths=coverage.xml
