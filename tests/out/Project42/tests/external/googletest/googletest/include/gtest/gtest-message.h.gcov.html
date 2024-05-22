@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-05-22 17:59:26</td>
+            <td class="headerValue">2024-05-22 18:01:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">1</td>
@@ -240,13 +240,13 @@
 <a name="178"><span class="lineNum">     178 </span>            :   // ensure consistent result across compilers, we always treat NULL</a>
 <a name="179"><span class="lineNum">     179 </span>            :   // as &quot;(null)&quot;.</a>
 <a name="180"><span class="lineNum">     180 </span>            :   template &lt;typename T&gt;</a>
-<a name="181"><span class="lineNum">     181 </span><span class="lineCov">         21 :   inline Message&amp; operator&lt;&lt;(T* const&amp; pointer) {  // NOLINT</span></a>
-<a name="182"><span class="lineNum">     182 </span><span class="lineCov">         21 :     if (pointer == nullptr) {</span></a>
+<a name="181"><span class="lineNum">     181 </span><span class="lineCov">         42 :   inline Message&amp; operator&lt;&lt;(T* const&amp; pointer) {  // NOLINT</span></a>
+<a name="182"><span class="lineNum">     182 </span><span class="lineCov">         42 :     if (pointer == nullptr) {</span></a>
 <a name="183"><span class="lineNum">     183 </span><span class="lineNoCov">          0 :       *ss_ &lt;&lt; &quot;(null)&quot;;</span></a>
 <a name="184"><span class="lineNum">     184 </span>            :     } else {</a>
-<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         21 :       *ss_ &lt;&lt; pointer;</span></a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">         42 :       *ss_ &lt;&lt; pointer;</span></a>
 <a name="186"><span class="lineNum">     186 </span>            :     }</a>
-<a name="187"><span class="lineNum">     187 </span><span class="lineCov">         21 :     return *this;</span></a>
+<a name="187"><span class="lineNum">     187 </span><span class="lineCov">         42 :     return *this;</span></a>
 <a name="188"><span class="lineNum">     188 </span>            :   }</a>
 <a name="189"><span class="lineNum">     189 </span>            : </a>
 <a name="190"><span class="lineNum">     190 </span>            :   // Since the basic IO manipulators are overloaded for both narrow</a>

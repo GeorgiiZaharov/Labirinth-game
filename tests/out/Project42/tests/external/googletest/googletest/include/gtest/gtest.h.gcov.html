@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2024-05-22 17:59:26</td>
+            <td class="headerValue">2024-05-22 18:01:23</td>
             <td></td>
             <td class="headerItem">Functions:</td>
             <td class="headerCovTableEntry">12</td>
@@ -1450,11 +1450,11 @@
 <a name="1388"><span class="lineNum">    1388 </span>            : </a>
 <a name="1389"><span class="lineNum">    1389 </span>            : // The helper function for {ASSERT|EXPECT}_EQ.</a>
 <a name="1390"><span class="lineNum">    1390 </span>            : template &lt;typename T1, typename T2&gt;</a>
-<a name="1391"><span class="lineNum">    1391 </span><span class="lineCov">          6 : AssertionResult CmpHelperEQ(const char* lhs_expression,</span></a>
+<a name="1391"><span class="lineNum">    1391 </span><span class="lineCov">         12 : AssertionResult CmpHelperEQ(const char* lhs_expression,</span></a>
 <a name="1392"><span class="lineNum">    1392 </span>            :                             const char* rhs_expression, const T1&amp; lhs,</a>
 <a name="1393"><span class="lineNum">    1393 </span>            :                             const T2&amp; rhs) {</a>
-<a name="1394"><span class="lineNum">    1394 </span><span class="lineCov">          6 :   if (lhs == rhs) {</span></a>
-<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">          6 :     return AssertionSuccess();</span></a>
+<a name="1394"><span class="lineNum">    1394 </span><span class="lineCov">         12 :   if (lhs == rhs) {</span></a>
+<a name="1395"><span class="lineNum">    1395 </span><span class="lineCov">         12 :     return AssertionSuccess();</span></a>
 <a name="1396"><span class="lineNum">    1396 </span>            :   }</a>
 <a name="1397"><span class="lineNum">    1397 </span>            : </a>
 <a name="1398"><span class="lineNum">    1398 </span><span class="lineNoCov">          0 :   return CmpHelperEQFailure(lhs_expression, rhs_expression, lhs, rhs);</span></a>
@@ -1469,10 +1469,10 @@
 <a name="1407"><span class="lineNum">    1407 </span>            :       // and the other is the null pointer constant.</a>
 <a name="1408"><span class="lineNum">    1408 </span>            :       typename std::enable_if&lt;!std::is_integral&lt;T1&gt;::value ||</a>
 <a name="1409"><span class="lineNum">    1409 </span>            :                               !std::is_pointer&lt;T2&gt;::value&gt;::type* = nullptr&gt;</a>
-<a name="1410"><span class="lineNum">    1410 </span><span class="lineCov">          6 :   static AssertionResult Compare(const char* lhs_expression,</span></a>
+<a name="1410"><span class="lineNum">    1410 </span><span class="lineCov">         12 :   static AssertionResult Compare(const char* lhs_expression,</span></a>
 <a name="1411"><span class="lineNum">    1411 </span>            :                                  const char* rhs_expression, const T1&amp; lhs,</a>
 <a name="1412"><span class="lineNum">    1412 </span>            :                                  const T2&amp; rhs) {</a>
-<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">          6 :     return CmpHelperEQ(lhs_expression, rhs_expression, lhs, rhs);</span></a>
+<a name="1413"><span class="lineNum">    1413 </span><span class="lineCov">         12 :     return CmpHelperEQ(lhs_expression, rhs_expression, lhs, rhs);</span></a>
 <a name="1414"><span class="lineNum">    1414 </span>            :   }</a>
 <a name="1415"><span class="lineNum">    1415 </span>            : </a>
 <a name="1416"><span class="lineNum">    1416 </span>            :   // With this overloaded version, we allow anonymous enums to be used</a>
@@ -1535,7 +1535,7 @@
 <a name="1473"><span class="lineNum">    1473 </span>            : // Implements the helper function for {ASSERT|EXPECT}_LE</a>
 <a name="1474"><span class="lineNum">    1474 </span>            : GTEST_IMPL_CMP_HELPER_(LE, &lt;=)</a>
 <a name="1475"><span class="lineNum">    1475 </span>            : // Implements the helper function for {ASSERT|EXPECT}_LT</a>
-<a name="1476"><span class="lineNum">    1476 </span><span class="lineCov">          1 : GTEST_IMPL_CMP_HELPER_(LT, &lt;)</span></a>
+<a name="1476"><span class="lineNum">    1476 </span><span class="lineCov">          2 : GTEST_IMPL_CMP_HELPER_(LT, &lt;)</span></a>
 <a name="1477"><span class="lineNum">    1477 </span>            : // Implements the helper function for {ASSERT|EXPECT}_GE</a>
 <a name="1478"><span class="lineNum">    1478 </span>            : GTEST_IMPL_CMP_HELPER_(GE, &gt;=)</a>
 <a name="1479"><span class="lineNum">    1479 </span>            : // Implements the helper function for {ASSERT|EXPECT}_GT</a>
@@ -2393,7 +2393,7 @@
 <a name="2331"><span class="lineNum">    2331 </span>            : // namespace and has an all-caps name.</a>
 <a name="2332"><span class="lineNum">    2332 </span>            : int RUN_ALL_TESTS() GTEST_MUST_USE_RESULT_;</a>
 <a name="2333"><span class="lineNum">    2333 </span>            : </a>
-<a name="2334"><span class="lineNum">    2334 </span><span class="lineCov">          1 : inline int RUN_ALL_TESTS() { return ::testing::UnitTest::GetInstance()-&gt;Run(); }</span></a>
+<a name="2334"><span class="lineNum">    2334 </span><span class="lineCov">          2 : inline int RUN_ALL_TESTS() { return ::testing::UnitTest::GetInstance()-&gt;Run(); }</span></a>
 <a name="2335"><span class="lineNum">    2335 </span>            : </a>
 <a name="2336"><span class="lineNum">    2336 </span>            : GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251</a>
 <a name="2337"><span class="lineNum">    2337 </span>            : </a>
