@@ -1,4 +1,5 @@
 sfml-app
-./tests/test_suite
-./tests/build
-./tests/bin
+tests/bin/
+tests/build/
+tests/external/
+tests/out/
