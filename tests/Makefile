@@ -45,7 +45,9 @@ coverage: $(TARGET)
 	genhtml coverage.info --output-directory out
 
 coveralls: coverage
-	cat coverage.info | coveralls --repo-token ${COVERALLS_REPO_TOKEN}
+	@cat coverage.info | coveralls --repo-token VEjIY5rCMVBLrp1tRLRkNAClUnq6OWtoI
+	@rm coverage.info
+
 
 
 .PHONY: all clean
