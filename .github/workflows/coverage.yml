@@ -15,7 +15,7 @@ jobs:
           git submodule update
           pip install --user cpp-coveralls
           pip install gcovr
-          sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
+          sudo apt-get update -y && sudo apt-get install -y libsfml-dev
 
       - name: Build googletest
         run: |
