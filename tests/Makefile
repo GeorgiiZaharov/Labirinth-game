@@ -22,7 +22,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS) $(TEST_OBJS)
 	@mkdir -p $(BINDIR)
-	$(CXX) $(CXXFLAGS) -o $@ $^ external/googletest/build/lib/libgtest.a external/googletest/build/lib/libgtest_main.a $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS) external/googletest/build/lib/libgtest.a external/googletest/build/lib/libgtest_main.a 
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
