@@ -18,7 +18,7 @@ jobs:
           java-version: '17'
       - run: git submodule init
       - run: git submodule update
-      - run: sudo apt-get update -y && sudo apt-get install -y libsfml-dev
+      - run: sudo apt-get update -y && sudo apt-get install -y libsfml-dev cmake
       - name: Set up Python 3.8 for gcovr
         uses: actions/setup-python@v4
         with:

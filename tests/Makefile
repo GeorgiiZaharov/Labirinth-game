@@ -1,7 +1,6 @@
 # Compiler and flags
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -fprofile-arcs -ftest-coverage
-LDFLAGS = -fprofile-arcs -ftest-coverage
 LIBS = -lsfml-graphics -pthread
 
 # Directories
