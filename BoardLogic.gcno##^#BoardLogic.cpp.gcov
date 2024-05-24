@@ -1,0 +1,84 @@
+        -:    0:Source:../BoardLogic.cpp
+        -:    0:Graph:/home/georgii/Projects/Labs/Project42/BoardLogic.gcno
+        -:    0:Data:-
+        -:    0:Runs:0
+        -:    0:Source is newer than graph
+        -:    1:#include "BoardLogic.hpp"
+        -:    2:
+    #####:    3:void BoardLogic::dfs(int w, int h)
+        -:    4:{
+    #####:    5:	if (is_go_abroad(w, h)) return; // если поступили некорректные координаты прекращаем построение
+    #####:    6:    was.insert(std::make_pair(w, h)); // отметились что побывали
+        -:    7:    while (true) {
+    #####:    8:        std::vector<std::pair<int, int>> v; // находим все варианты куда можем пойти
+    #####:    9:        if (!is_go_abroad(w, h + 1) && !was.count(std::make_pair(w, h + 1))) v.push_back(std::make_pair(0, 1));
+    #####:   10:        if (!is_go_abroad(w + 1, h) && !was.count(std::make_pair(w + 1, h))) v.push_back(std::make_pair(1, 0));
+    #####:   11:        if (!is_go_abroad(w, h - 1) && !was.count(std::make_pair(w, h - 1))) v.push_back(std::make_pair(0, -1));
+    #####:   12:        if (!is_go_abroad(w - 1, h) && !was.count(std::make_pair(w - 1, h))) v.push_back(std::make_pair(-1, 0));
+        -:   13:
+    #####:   14:        if (v.size() == 0) break; // были везде в округе
+        -:   15:
+    #####:   16:        int choice = random() % v.size(); // выбираем куда идти
+    #####:   17:        int delta_w = v[choice].first, delta_h = v[choice].second; // запоминаем направление
+        -:   18:
+    #####:   19:        graph[std::make_pair(h, w)].push_back(std::make_pair(h + delta_h, w + delta_w)); // добавляем вершины в граф
+    #####:   20:        graph[std::make_pair(h + delta_h, w + delta_w)].push_back(std::make_pair(h, w)); // добавляем вершины в граф
+        -:   21:
+    #####:   22:        v.clear();
+    #####:   23:        dfs(w + delta_w, h + delta_h);
+    #####:   24:    }
+        -:   25:}
+        -:   26:
+    #####:   27:std::vector<std::pair<int, int>> BoardLogic::navigator(const sf::Vector2i& index_from, const sf::Vector2i& index_to, int max_depth) const
+        -:   28:{
+    #####:   29:	bool flag = false;		// флаг того найден путь или еще нет
+    #####:   30:	std::pair<std::pair<int, int>, int> from;	// хранится родительская вершина и текущяя глубина
+    #####:   31:	std::map<std::pair<int, int>, std::pair<int, int>> was;	// откуда мы пришли в эту вершину
+    #####:   32:	was[std::make_pair(index_from.x, index_from.y)] = std::make_pair(-1, -1);
+    #####:   33:	std::queue<std::pair<std::pair<int, int>, int>> q;		// <позиция <int, int>, глубина int>
+    #####:   34:	q.push(std::make_pair(std::make_pair(index_from.x, index_from.y), 0));
+        -:   35:
+    #####:   36:	std::vector<std::pair<int, int>> result;
+        -:   37:
+    #####:   38:	while (!q.empty()){
+        -:   39:
+    #####:   40:		from = q.front();			//получаем вершину с которой будем работать
+    #####:   41:		q.pop();
+    #####:   42:		if (max_depth != 0 && from.second >= max_depth)
+        -:   43:		{
+    #####:   44:			break;
+        -:   45:		}
+    #####:   46:		if (graph.find(from.first) != graph.end())	// если есть такой элемент
+        -:   47:		{
+    #####:   48:			for (std::pair<int, int> i : graph.at(from.first)){	 //смотрим все варианты куда можем идти
+    #####:   49:				if (!was.count(i)){		//здесь еще не были
+    #####:   50:					was[i] = from.first;		//запоминаем откуда мы сюда попали
+    #####:   51:					q.push(std::make_pair(i, from.second + 1));			//добавляем в очередь
+        -:   52:				}
+    #####:   53:				if (i == std::make_pair(index_to.x, index_to.y)){
+    #####:   54:					flag = true;			//если нашли то прекращаем поиск
+    #####:   55:					break;
+        -:   56:				}
+        -:   57:			}
+        -:   58:		}
+        -:   59:		
+    #####:   60:		if (flag) break;
+        -:   61:	}
+    #####:   62:	if (!flag) return result;
+        -:   63:	//собираем путь от позиции to до позиции from (невключительно)
+    #####:   64:	std::pair<int, int> cur = std::make_pair(index_to.x, index_to.y);
+    #####:   65:	while (cur != std::make_pair(index_from.x, index_from.y)){
+    #####:   66:		result.push_back(cur);
+    #####:   67:		cur = was[cur];
+        -:   68:	}
+        -:   69:
+        -:   70:	//разворачиваем получившийся путь
+    #####:   71:	reverse(std::begin(result), std::end(result));
+    #####:   72:	return result;
+    #####:   73:}
+        -:   74:
+    #####:   75:bool BoardLogic::is_go_abroad(int w, int h) const
+        -:   76:{
+    #####:   77:	if (w < 0 || h < 0 || w >= static_cast<int>(n) || h >= static_cast<int>(m)) return true;
+    #####:   78:	return false;
+        -:   79:}
