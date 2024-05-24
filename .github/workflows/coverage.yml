@@ -24,9 +24,9 @@ jobs:
         run: |
           cd tests
           make test
-          lcov --capture --directory . --output-file coverage.info
-          lcov --remove coverage.info '/usr/*' --output-file coverage.info
-          lcov --remove coverage.info '/external/*' --output-file coverage.info
+          # lcov --capture --directory . --output-file coverage.info
+          # lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          # lcov --remove coverage.info '/external/*' --output-file coverage.info
 
           coveralls -t ${{ secrets.coveralls_repo_token }} --root . -E ".*external.*" -E ".*tests.*"
 
