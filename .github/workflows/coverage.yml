@@ -22,7 +22,7 @@ jobs:
           cd build
           cmake ..
           make
-          
+
       - name: Run tests
         run: |
           cd tests
@@ -30,7 +30,7 @@ jobs:
       - name: Send coverage data to Coveralls
         run: |
           cd tests
-          coveralls-lcov --repo-token ${{ secrets.coveralls_repo_token }} coverage.info
+          coveralls-lcov --repo-token ${{ secrets.coveralls_repo_token }} tests/coverage.info
 
   # sonarcloud-check:
   #   needs: gtest-tests
