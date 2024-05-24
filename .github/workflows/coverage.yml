@@ -13,7 +13,6 @@ jobs:
           git submodule update
           pip install --user cpp-coveralls
           sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
-          npm install -g coveralls-lcov
 
       - name: Build googletest
         run: |
@@ -30,7 +29,7 @@ jobs:
       - name: Send coverage data to Coveralls
         run: |
           cd tests
-          coveralls-lcov --repo-token ${{ secrets.coveralls_repo_token }} tests/coverage.info
+          coveralls -t ${{ secrets.coveralls_token }} --root . -E ".*external.*" -E ".*tests.*" -i coverage.info
 
   # sonarcloud-check:
   #   needs: gtest-tests
