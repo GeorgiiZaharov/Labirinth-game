@@ -26,9 +26,7 @@ jobs:
           make test
 
       - name: Coveralls
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
-        run: coveralls -t $COVERALLS_REPO_TOKEN --root . -E ".*external.*" -E ".*tests.*"
+        run: coveralls -t ${{ secrets.coveralls_token }} --root . -E ".*external.*" -E ".*tests.*"
 
   sonarcloud-check:
     needs: gtest-tests
