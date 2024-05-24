@@ -13,6 +13,13 @@ jobs:
           git submodule update
           pip install --user cpp-coveralls
           sudo apt-get update -y && sudo apt-get install -y libsfml-dev
+      - name: Install googletest
+        run: |
+          cd external/googletest
+          mkdir -p build
+          cd build
+          cmake ..
+          make
       - name: Run tests
         run: |
           cd tests
