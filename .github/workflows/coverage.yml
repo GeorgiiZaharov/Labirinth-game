@@ -20,13 +20,10 @@ jobs:
           cd build
           cmake ..
           make
-      - name: Run tests
+      - name: Run tests and Send coverage data to Coveralls
         run: |
           cd tests
           make test
-      - name: Send coverage data to Coveralls
-        run: |
-          cd tests
           coveralls -t ${{ secrets.coveralls_repo_token }} --root . -E ".*external.*" -E ".*tests.*"
 
   sonarcloud-check:
