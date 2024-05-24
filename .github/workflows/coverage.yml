@@ -33,7 +33,7 @@ jobs:
       - name: Generate coverage report
         run: |
           cd tests
-          gcovr --format=lcov --exclude '.*external.*' -r . -o coverage.info
+          gcovr --exclude '.*external.*' -r . -o coverage.info
 
       - name: Send coverage data to Coveralls
         run: |
