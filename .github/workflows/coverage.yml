@@ -18,11 +18,7 @@ jobs:
           java-version: '17'
       - run: git submodule init
       - run: git submodule update
-      - run: sudo apt-get update -y && sudo apt-get install -y libsfml-dev cmake
-      - name: Set up Python 3.8 for gcovr
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
+      - run: sudo apt-get update -y && sudo apt-get install -y libsfml-dev libgtest-dev
       - name: Build googletest
         run: |
           cd tests/external/googletest
@@ -30,6 +26,10 @@ jobs:
           cd build
           cmake ..
           make
+      - name: Set up Python 3.8 for gcovr
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
       - name: install gcovr 5.0
         run: |
           pip install gcovr==5.0 # 5.1 is not supported
