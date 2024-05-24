@@ -1,3 +1,4 @@
 sfml-app
 tests/build/
 tests/out/
+tests/bin/
