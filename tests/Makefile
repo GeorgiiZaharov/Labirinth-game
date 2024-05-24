@@ -40,6 +40,11 @@ coverage: $(TARGET)
 	lcov --remove coverage.info '/usr/*' --output-file coverage.info
 	genhtml coverage.info --output-directory out
 
+test: $(TARGET)
+	./$(TARGET)
+	lcov --capture --directory . --output-file coverage.info
+	lcov --remove coverage.info '/usr/*' --output-file coverage.info
+
 clean:
 	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info out
 .PHONY: all coverage clean
