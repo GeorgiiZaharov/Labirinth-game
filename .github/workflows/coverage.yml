@@ -15,7 +15,7 @@ jobs:
           sudo apt-get update -y && sudo apt-get install -y libsfml-dev
       - name: Install googletest
         run: |
-          cd external/googletest
+          cd tests/external/googletest
           mkdir -p build
           cd build
           cmake ..
