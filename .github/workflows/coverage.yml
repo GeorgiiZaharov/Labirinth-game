@@ -32,6 +32,7 @@ jobs:
 
       - name: Generate coverage report
         run: |
+          cd tests
           gcovr --exclude '.*external.*' -r . -o coverage.xml
 
       - name: Send coverage data to Coveralls
