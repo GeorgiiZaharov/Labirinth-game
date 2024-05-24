@@ -36,8 +36,11 @@ $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 
 test: $(TARGET)
 	./$(TARGET)
-	lcov --capture --directory . --output-file coverage.info
+
+coverage: test
+	gcov $(SRCS)
+	mv *.gcov $(BUILDDIR)
 
 clean:
-	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info out
+	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov out
 .PHONY: all coverage clean
