@@ -20,13 +20,15 @@ jobs:
           cd build
           cmake ..
           make
-      - name: Run tests
+      - name: Run tests and send to Coveralls
         run: |
           cd tests
           make test
+          lcov --capture --directory . --output-file coverage.info
+          lcov --remove coverage.info '/usr/*' --output-file coverage.info
+          lcov --remove coverage.info '/external/*' --output-file coverage.info
 
-      - name: Coveralls
-        run: coveralls -t ${{ secrets.coveralls_repo_token }} --root . -E ".*external.*" -E ".*tests.*"
+          coveralls -t ${{ secrets.coveralls_repo_token }} --root . -E ".*external.*" -E ".*tests.*"
 
   sonarcloud-check:
     needs: gtest-tests
