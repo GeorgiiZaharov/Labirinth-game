@@ -1,0 +1,53 @@
+        -:    0:Source:../BombLogic.cpp
+        -:    1:#include "BombLogic.hpp"
+    #####:    2:bool BombLogic::planting(const sf::FloatRect& pos_obj, __int64_t cur_time)
+        -:    3:{
+    #####:    4:    if (activate) return false; // если бомба уже активирована то и ставить ее не нужно
+    #####:    5:    sf::Vector2f cur_bomb_pos(pos_obj.left + pos_obj.width / 2,
+    #####:    6:                              pos_obj.top + pos_obj.height / 2);
+        -:    7:    // сравниваем текущее положение бомбы с предыдущим
+    #####:    8:    if (cur_bomb_pos == last_bomb_pos)
+        -:    9:    { // если они равны (бомба не передвигалась)
+    #####:   10:        plant_duration = cur_time - start_plant_time;   // пересчитываем сколько мы устанавливали бомбу
+    #####:   11:        if (plant_duration >= planting_time)       // прошло ли достаточно времени
+        -:   12:        {
+    #####:   13:            activate = true;                        // устанавливаем бомбу
+        -:   14:        }
+        -:   15:    }
+        -:   16:    else // если же передвигалась
+        -:   17:    { // изменяем стартовое время и позицию
+    #####:   18:        start_plant_time = cur_time;
+    #####:   19:        last_bomb_pos = cur_bomb_pos;
+    #####:   20:        plant_duration = 0;
+        -:   21:    }
+    #####:   22:    return activate;
+        -:   23:}
+        -:   24:
+    #####:   25:void BombLogic::drop_planting(void)
+        -:   26:{
+    #####:   27:    if (!activate)
+        -:   28:    {
+    #####:   29:        last_bomb_pos = sf::Vector2f(-100, -100);
+    #####:   30:        plant_duration = 0;
+        -:   31:    }
+    #####:   32:}
+        -:   33:
+    #####:   34:void BombLogic::deactivate(void)
+        -:   35:{
+    #####:   36:    activate = false;    
+    #####:   37:}
+        -:   38:
+    #####:   39:bool BombLogic::is_activate(void) const
+        -:   40:{
+    #####:   41:    return activate;
+        -:   42:}
+        -:   43:
+    #####:   44:std::pair<__int64_t, __int64_t> BombLogic::get_plant_info(void) const
+        -:   45:{
+    #####:   46:    return std::make_pair(plant_duration, planting_time);
+        -:   47:}
+        -:   48:
+    #####:   49:sf::Vector2f BombLogic::get_pos(void) const
+        -:   50:{
+    #####:   51:    return last_bomb_pos;
+        -:   52:}
