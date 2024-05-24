@@ -24,7 +24,7 @@ all: $(TARGET)
 
 $(TARGET): $(OBJS) $(TEST_OBJS)
 	@mkdir -p $(BINDIR)
-	$(CXX) $(LDFLAGS) -o $@ $^ external/googletest/build/lib/libgtest.a external/googletest/build/lib/libgtest_main.a $(LIBS)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $^ external/googletest/build/lib/libgtest.a external/googletest/build/lib/libgtest_main.a $(LIBS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
@@ -36,6 +36,10 @@ $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 
 test: $(TARGET)
 	./$(TARGET)
+	lcov --capture --directory . --output-file coverage.info
+	lcov --remove coverage.info '/usr/*' --output-file coverage.info
+	lcov --remove coverage.info '*/external/*' --output-file coverage.info
+
 
 
 clean:
