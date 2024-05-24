@@ -12,7 +12,7 @@ jobs:
           git submodule init
           git submodule update
           pip install --user cpp-coveralls
-          sudo apt-get update -y && sudo apt-get install -y libsfml-dev
+          sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
       - name: Install googletest
         run: |
           cd tests/external/googletest
