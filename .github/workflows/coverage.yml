@@ -36,4 +36,5 @@ jobs:
           gcovr --exclude '.*external.*' -r . -o coverage.xml
 
       - name: Send coverage data to Coveralls
-        run: coveralls -t ${{ secrets.coveralls_repo_token }} --root tests
+        cd tests
+        run: coveralls -t ${{ secrets.coveralls_repo_token }} --root . -E ".*external.*" -E ".*tests.*"
