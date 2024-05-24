@@ -33,8 +33,8 @@ jobs:
       - name: Generate coverage report
         run: |
           cd tests
-          gcovr --exclude '.*external.*' -r . -o coverage.xml
+          gcovr --format=lcov --exclude '.*external.*' -r . -o coverage.info
 
       - name: Send coverage data to Coveralls
         run: |
-          coveralls -t ${{ secrets.coveralls_repo_token }} --root . -i coverage.xml
+          coveralls -t ${{ secrets.coveralls_repo_token }} --root . -i tests/coverage.info
