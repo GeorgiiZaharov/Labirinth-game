@@ -1,43 +1,64 @@
 name: CI/CD GitHub Actions
-
-on:
-  push:
-    branches:
-      - main
-
+on: [push]
 jobs:
   gtest-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
         with:
-          fetch-depth: 0 
-
-      - name: Install SFML dependencies
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up Google Test
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y libsfml-dev
-
+          sudo apt-get update
+          sudo apt-get install -y libgtest-dev
+          sudo apt-get install -y cmake # Install CMake to build Google Test
+          cd /usr/src/gtest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp *.a /usr/lib
       - name: Build and run tests
         run: |
           make -C tests
-          ./tests/runTests
+      - name: Coveralls
+        run: coveralls -t ${{ secrets.coveralls_token }} --root . -E ".*external.*" -E ".*tests.*"
 
-      - name: Install gcovr
-        run: |
-          pip install gcovr
-
-      - name: Generate coverage report
-        run: |
-          gcovr --root . --exclude tests --xml > coverage.xml
-
-  coveralls:
+  sonarcloud-check:
     needs: gtest-tests
     runs-on: ubuntu-latest
+    env:
+      SONAR_SCANNER_VERSION: 4.6.1.2450 # Find the latest version in the "Linux" link on this page: https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
+      SONAR_SERVER_URL: "https://sonarcloud.io"
+      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
-      - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@v2
+      - uses: actions/checkout@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: coverage.xml
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Set up Google Test
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtest-dev
+          sudo apt-get install -y cmake # Install CMake to build Google Test
+          cd /usr/src/gtest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo cp *.a /usr/lib
+      - name: Install SonarCloud Scanner and build-wrapper
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          sonarcloud-token: ${{ secrets.SONAR_TOKEN }}
+      - name: Run build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make
+      - name: Run tests to generate coverage statistics
+        run: |
+          ./tests/tests
+      - name: Collect coverage into one XML report
+        run: |
+          gcovr --sonarqube > coverage.xml
+      - name: Run SonarCloud Scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sonar-scanner \
+            --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
+            --define sonar.coverageReportPaths=coverage.xml
