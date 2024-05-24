@@ -2,7 +2,6 @@
 #define BOARD_HPP
 
 #include "includes.hpp"
-#include <gtest/gtest.h>
 
 #include "BoardLogic.hpp"
 #include "Cell.hpp"

@@ -1,4 +1,5 @@
-sfml-app
+obj/
+bin/
 tests/build/
 tests/out/
 tests/bin/
