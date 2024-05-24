@@ -39,7 +39,6 @@ test: $(TARGET)
 
 coverage: test
 	gcov $(SRCS)
-	mv *.gcov $(BUILDDIR)
 
 clean:
 	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov out
