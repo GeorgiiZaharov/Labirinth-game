@@ -1,48 +1,29 @@
-
 #include "Bomb.hpp"
 
 Bomb::Bomb(int w, int h)
-    : activate(false),
-      w(w), h(h),
-      planting_time(2000), // 2 секунд время установки
-      start_plant_time(0), 
-      plant_duration(0),
-      last_bomb_pos(-100, -100) // изначальная координата бомбы
+: w(w), h(h)
 {
+    activate = false;
+    planting_time = 2000;  // 2 секунд время установки
+    start_plant_time = 0;
+    plant_duration = 0;
+    last_bomb_pos = sf::Vector2f(-100.0f, -100.0f);
+
     wait_anim = Animation(wait_tex, 100, 100, 2, 500, true);
     wait_anim.resize_animation(sf::FloatRect(0, 0, w, h));
 }
 
 void Bomb::planting(const sf::FloatRect& pos_obj, __int64_t cur_time)
 {
-    if (activate) return; // если бомба уже активирована то и ставить ее не нужно
-    sf::Vector2f cur_bomb_pos(pos_obj.left + pos_obj.width / 2,
-                              pos_obj.top + pos_obj.height / 2);
-    // сравниваем текущее положение бомбы с предыдущим
-    if (cur_bomb_pos == last_bomb_pos)
-    { // если они равны (бомба не передвигалась)
-        plant_duration = cur_time - start_plant_time;   // пересчитываем сколько мы устанавливали бомбу
-        if (plant_duration >= planting_time)       // прошло ли достаточно времени
-        {
-            activate = true;                        // устанавливаем бомбу
-            wait_anim.start_animation(cur_time);    // запускаем анимацию
-        }
-    }
-    else // если же передвигалась
-    { // изменяем стартовое время и позицию
-        start_plant_time = cur_time;
-        last_bomb_pos = cur_bomb_pos;
-        plant_duration = 0;
+    if (BombLogic::planting(pos_obj, cur_time)) // елсли получилось установить бомбу
+    {
+        wait_anim.start_animation(cur_time);    // запускаем анимацию
     }
 }
 
 void Bomb::drop_planting(void)
 {
-    if (!activate)
-    {
-        last_bomb_pos = sf::Vector2f(-100, -100);
-        plant_duration = 0;
-    }
+    BombLogic::drop_planting();
 }
 
 bool Bomb::loadResources(void)
@@ -61,22 +42,22 @@ void Bomb::draw(sf::RenderWindow& window, __int64_t cur_time)
 
 std::pair<__int64_t, __int64_t> Bomb::get_plant_info(void) const
 {
-    return std::make_pair(plant_duration, planting_time);
+    return BombLogic::get_plant_info();
 }
 
 bool Bomb::is_activate(void) const
 {
-    return activate;
+    return BombLogic::is_activate();
 }
 
 sf::Vector2f Bomb::get_pos(void) const
 {
-    return last_bomb_pos;
+    return BombLogic::get_pos();
 }
 
 void Bomb::deactivate(void)
 {
-    activate = false;
+    BombLogic::deactivate();
 }
 
 int Bomb::get_damage(void)

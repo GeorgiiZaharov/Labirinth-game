@@ -2,7 +2,7 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -I./external/googletest/googletest/include -fprofile-arcs -ftest-coverage
 LDFLAGS = -fprofile-arcs -ftest-coverage
-LIBS = -lsfml-graphics -lsfml-window -lsfml-system -lsfml-audio -pthread
+LIBS = -lsfml-graphics -pthread
 
 # Directories
 SRCDIR = ..
@@ -11,8 +11,7 @@ BINDIR = bin
 TESTDIR = .
 
 # Source files
-# SRCS = $(filter-out $(SRCDIR)/main.cpp, $(wildcard $(SRCDIR)/*.cpp))
-SRCS=$(SRCDIR)/Board.cpp $(SRCDIR)/Animation.cpp $(SRCDIR)/Cell.cpp $(SRCDIR)/Bullet.cpp $(SRCDIR)/Bomb.cpp
+SRCS=$(SRCDIR)/BombLogic.cpp $(SRCDIR)/BoardLogic.cpp
 TEST_SRCS = $(wildcard $(TESTDIR)/*.cpp)
 OBJS = $(SRCS:$(SRCDIR)/%.cpp=$(BUILDDIR)/%.o)
 TEST_OBJS = $(TEST_SRCS:$(TESTDIR)/%.cpp=$(BUILDDIR)/%.o)
@@ -35,19 +34,12 @@ $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-clean:
-	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info
-
 coverage: $(TARGET)
 	./$(TARGET)
 	lcov --capture --directory . --output-file coverage.info
 	lcov --remove coverage.info '/usr/*' --output-file coverage.info
 	genhtml coverage.info --output-directory out
 
-coveralls: coverage
-	@cat coverage.info | coveralls --repo-token VEjIY5rCMVBLrp1tRLRkNAClUnq6OWtoI
-	@rm coverage.info
-
-
-
-.PHONY: all clean
+clean:
+	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info out
+.PHONY: all coverage clean

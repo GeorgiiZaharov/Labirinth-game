@@ -1,14 +1,11 @@
 #include "Board.hpp"
 
 Board::Board(const sf::FloatRect& pos)
-:n(),//ширина
-m(),// высота
-screen_w(pos.width),
-screen_h(pos.height),
-border_width(10.0f),
-pos(pos)
+:pos(pos)
 {
-	if (!Cell::loadResources())
+	n = 0; m = 0; // ширина и высота лабиринта в клетках
+	border_width = 10.0f; // ширина стен лабиринта
+	if (!Cell::loadResources())	// загружаем ресурсы для клетки
 		std::cout << "CELL load resources error" << std::endl;
 }
 
@@ -33,8 +30,8 @@ void Board::build(void)
 	cells.clear();
 
 	// в соответствии с размером поля вычисляем размеры ячейки
-	cell_w = static_cast<float>(pos.width) / n;
-	cell_h = static_cast<float>(pos.height) / m; 
+	cell_w = pos.width / n;
+	cell_h = pos.height / m; 
 
 	// в соответствии с размером заполняем cells объектами cell
 	for (std::size_t i = 0; i < m; ++i){
@@ -45,122 +42,11 @@ void Board::build(void)
 		}
 		cells.push_back(tmp_cells);
 	}
-	// генерируем рандомный лабиринт
+	// генерируем рандомный граф
 	dfs(0, 0);
+	// согласно этому графу удаляем ненужные стены
+	destroy_cell_borders();
 }
-void Board::dfs(int w, int h)
-{
-	if (is_go_abroad(w, h)) return;			// если поступили некорректные координаты прекращаем построение
-	was.insert(std::make_pair(w, h));		// отметились что побывали
-	while (true)
-	{	
-		std::vector<std::pair<int, int>> v;			// находим все варианты куда можем пойти
-		if (!is_go_abroad(w, h + 1) && !was.count(std::make_pair(w, h + 1))) v.push_back(std::make_pair(0, 1));
-		if (!is_go_abroad(w + 1, h) && !was.count(std::make_pair(w + 1, h))) v.push_back(std::make_pair(1, 0));
-		if (!is_go_abroad(w, h - 1) && !was.count(std::make_pair(w, h - 1))) v.push_back(std::make_pair(0, -1));
-		if (!is_go_abroad(w - 1, h) && !was.count(std::make_pair(w - 1, h))) v.push_back(std::make_pair(-1, 0));
-
-		if (v.size() == 0) break;		//были везде в округе
-
-		int choice = random() % v.size();		// выбираем куда идти
-		int delta_w = v[choice].first, delta_h = v[choice].second;		// запоминаем направление
-
-		this->graph[std::make_pair(h, w)].push_back(std::make_pair(h + delta_h, w + delta_w));	// добавляем вершины в граф
-		this->graph[std::make_pair(h + delta_h, w + delta_w)].push_back(std::make_pair(h, w));	// добавляем вершины в граф
-
-		// в зависимости от направления удаляем стенки следующего и текущего
-		if (delta_h == 1)
-		{
-			cells[h + delta_h][w + delta_w].is_up = false;
-			cells[h][w].is_down = false;
-		}
-		else if (delta_w == 1)
-		{
-			cells[h + delta_h][w + delta_w].is_left = false;
-			cells[h][w].is_right = false;
-		}
-		else if (delta_h == -1)
-		{
-			cells[h + delta_h][w + delta_w].is_down = false;
-			cells[h][w].is_up = false;
-		}
-		else if (delta_w == -1)
-		{
-			cells[h + delta_h][w + delta_w].is_right = false;
-			cells[h][w].is_left = false;
-		}
-		v.clear();
-
-		dfs(w + delta_w, h + delta_h);
-	}
-}
-
-
-float Board::get_people_size(void) const
-{
-	return std::min(cell_w, cell_h) * 1.0f / 4;
-}
-
-sf::Vector2f Board::get_cell_size(void) const
-{
-	return sf::Vector2f(cell_w, cell_h);
-}
-void Board::set_board_size(std::size_t board_width, std::size_t board_height)
-{
-	n = board_width;
-	m = board_height;
-}
-
-bool Board::is_go_abroad(int w, int h) const
-{
-	if (w < 0 || h < 0 || w >= static_cast<int>(n) || h >= static_cast<int>(m)) return true;
-	return false;
-}
-
-std::vector<std::pair<int, int>> Board::navigator(const sf::Vector2i& index_from, const sf::Vector2i& index_to, int max_depth)
-{
-	bool flag = false;		// флаг того найден путь или еще нет
-	std::pair<std::pair<int, int>, int> from;	// хранится родительская вершина и текущяя глубина
-	std::map<std::pair<int, int>, std::pair<int, int>> was;	// откуда мы пришли в эту вершину
-	was[std::make_pair(index_from.x, index_from.y)] = std::make_pair(-1, -1);
-	std::queue<std::pair<std::pair<int, int>, int>> q;		// <позиция <int, int>, глубина int>
-	q.push(std::make_pair(std::make_pair(index_from.x, index_from.y), 0));
-
-	std::vector<std::pair<int, int>> result;
-
-	while (!q.empty()){
-
-		from = q.front();			//получаем вершину с которой будем работать
-		q.pop();
-		if (max_depth != 0 && from.second >= max_depth)
-		{
-			break;
-		}
-		for (std::pair<int, int> i : graph[from.first]){	 //смотрим все варианты куда можем идти
-			if (!was.count(i)){		//здесь еще не были
-				was[i] = from.first;		//запоминаем откуда мы сюда попали
-				q.push(std::make_pair(i, from.second + 1));			//добавляем в очередь
-			}
-			if (i == std::make_pair(index_to.x, index_to.y)){
-				flag = true;			//если нашли то прекращаем поиск
-				break;
-			}
-		}
-		if (flag) break;
-	}
-	if (!flag) return result;
-	//собираем путь от позиции to до позиции from (невключительно)
-	std::pair<int, int> cur = std::make_pair(index_to.x, index_to.y);
-	while (cur != std::make_pair(index_from.x, index_from.y)){
-		result.push_back(cur);
-		cur = was[cur];
-	}
-
-	//разворачиваем получившийся путь
-	reverse(std::begin(result), std::end(result));
-	return result;
-}
-
 
 void Board::draw(sf::RenderWindow& window, __int64_t cur_time)
 {
@@ -171,6 +57,11 @@ void Board::draw(sf::RenderWindow& window, __int64_t cur_time)
 			cells[i][j].draw(window, cur_time);
 		}
 	}
+}
+
+std::vector<std::pair<int, int>> Board::navigator(const sf::Vector2i& index_from, const sf::Vector2i& index_to, int max_depth) const
+{
+	return BoardLogic::navigator(index_from, index_to, max_depth);
 }
 
 bool Board::check_collision(const sf::FloatRect& r) const
@@ -194,45 +85,10 @@ void Board::check_collision(Bullet& b) const
 	}
 }
 
-sf::Vector2i Board::calc_pos_on_board(const sf::FloatRect& obj_pos)
+void Board::boom_cell(int x, int y, __int64_t cur_time)
 {
-	float x = obj_pos.left + obj_pos.width / 2;
-	float y = obj_pos.top + obj_pos.height / 2;
-	return sf::Vector2i(static_cast<int>((y - pos.top) / cell_h), 
-						static_cast<int>((x - pos.left) / cell_w));
+	cells[x][y].make_boom(cur_time);
 }
-
-sf::Vector2i Board::calc_pos_on_board(const sf::FloatRect& obj_pos, const sf::Vector2f& direct)
-{
-	int poz_x = 0, poz_y = 0;
-	// рассчитывем позицию изходя из предыдущего направления, чтобы он не ходил по краям клеток
-	if (direct.y == -1.0f)
-	{			//up
-		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 - pos.left) / cell_w);
-		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 + 1.f / 4 * cell_h - pos.top) / cell_h);
-	}			
-	else if (direct.x == 1.0f)
-	{		//right
-		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 - 1.f / 4 * cell_w - pos.left) / cell_w);
-		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 - pos.top) / cell_h);
-	}
-	else if (direct.y == 1.0f)
-	{		//down
-		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 - pos.left) / cell_w);
-		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 - 1.f / 4 * cell_h - pos.top) / cell_h);
-	}
-	else if (direct.x == -1.0f)
-	{		//left
-		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 + 1.f / 4 * cell_w - pos.left) / cell_w);
-		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 - pos.top) / cell_h);
-	}
-	else
-	{
-		return calc_pos_on_board(obj_pos);
-	}
-	return sf::Vector2i(poz_y, poz_x);
-}
-
 
 void Board::wall_destroyer(const sf::FloatRect& obj_pos)
 {
@@ -311,17 +167,12 @@ void Board::wall_destroyer(const sf::FloatRect& obj_pos)
 	}
 }
 
-void Board::boom_cell(int x, int y, __int64_t cur_time)
-{
-	cells[x][y].make_boom(cur_time);
-}
-
-std::vector<std::pair<int, int>> Board::neighbour(const sf::FloatRect& obj_pos)
+std::vector<std::pair<int, int>> Board::neighbour(const sf::FloatRect& obj_pos) const
 {
 	// получаем координаты ячейки в которой находится объект
 	sf::Vector2i cell_cor = calc_pos_on_board(obj_pos);
 	// Создаем множество для хранения уникальных пар
-    std::set<std::pair<int, int>> unique_pairs(graph[std::make_pair(cell_cor.x, cell_cor.y)].begin(), graph[std::make_pair(cell_cor.x, cell_cor.y)].end());
+    std::set<std::pair<int, int>> unique_pairs(graph.at(std::make_pair(cell_cor.x, cell_cor.y)).begin(), graph.at(std::make_pair(cell_cor.x, cell_cor.y)).end());
 
     // Создаем новый вектор и заполняем его уникальными парами из множества
     std::vector<std::pair<int, int>> output(unique_pairs.begin(), unique_pairs.end());
@@ -330,6 +181,109 @@ std::vector<std::pair<int, int>> Board::neighbour(const sf::FloatRect& obj_pos)
     output.push_back(std::make_pair(cell_cor.x, cell_cor.y));
 
     return output;
+}
+
+sf::Vector2i Board::calc_pos_on_board(const sf::FloatRect& obj_pos) const
+{
+	float x = obj_pos.left + obj_pos.width / 2;
+	float y = obj_pos.top + obj_pos.height / 2;
+	return sf::Vector2i(static_cast<int>((y - pos.top) / cell_h), 
+						static_cast<int>((x - pos.left) / cell_w));
+}
+
+sf::Vector2i Board::calc_pos_on_board(const sf::FloatRect& obj_pos, const sf::Vector2f& direct) const
+{
+	int poz_x = 0, poz_y = 0;
+	// рассчитывем позицию изходя из предыдущего направления, чтобы он не ходил по краям клеток
+	if (direct.y == -1.0f)
+	{			//up
+		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 - pos.left) / cell_w);
+		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 + 1.f / 4 * cell_h - pos.top) / cell_h);
+	}			
+	else if (direct.x == 1.0f)
+	{		//right
+		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 - 1.f / 4 * cell_w - pos.left) / cell_w);
+		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 - pos.top) / cell_h);
+	}
+	else if (direct.y == 1.0f)
+	{		//down
+		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 - pos.left) / cell_w);
+		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 - 1.f / 4 * cell_h - pos.top) / cell_h);
+	}
+	else if (direct.x == -1.0f)
+	{		//left
+		poz_x = static_cast<int>((obj_pos.left + obj_pos.width / 2 + 1.f / 4 * cell_w - pos.left) / cell_w);
+		poz_y = static_cast<int>((obj_pos.top + obj_pos.height / 2 - pos.top) / cell_h);
+	}
+	else
+	{
+		return calc_pos_on_board(obj_pos);
+	}
+	return sf::Vector2i(poz_y, poz_x);
+}
+
+float Board::get_people_size(void) const
+{
+	return std::min(cell_w, cell_h) * 1.0f / 4;
+}
+
+sf::Vector2f Board::get_cell_size(void) const
+{
+	return sf::Vector2f(cell_w, cell_h);
+}
+void Board::set_board_size(std::size_t board_width, std::size_t board_height)
+{
+	n = board_width;
+	m = board_height;
+}
+
+void Board::destroy_cell_borders(void)
+{
+    std::queue<std::pair<int, int>> q; // Очередь для обхода в ширину (BFS)
+    std::set<std::pair<int, int>> visited; // Множество для хранения посещенных узлов
+
+    // Начинаем обход с клетки (0, 0)
+    q.push(std::make_pair(0, 0)); 
+    visited.insert(std::make_pair(0, 0)); // Добавляем стартовую клетку в множество посещенных
+
+    // Пока очередь не пуста
+    while (!q.empty()) {
+        auto current = q.front(); // Берем первый элемент из очереди
+        q.pop(); // Удаляем его из очереди
+
+        int h = current.first; // Текущая строка
+        int w = current.second; // Текущий столбец
+
+        // Проходим по всем соседям текущей клетки, которые есть в графе
+        for (const auto& neighbor : graph[current]) {
+            int nh = neighbor.first; // Строка соседа
+            int nw = neighbor.second; // Столбец соседа
+
+            // Если сосед еще не был посещен
+            if (!visited.count(neighbor)) {
+                visited.insert(neighbor); // Добавляем соседа в множество посещенных
+                q.push(neighbor); // Добавляем соседа в очередь для дальнейшего обхода
+
+                int delta_h = nh - h; // Разница по строкам между текущей клеткой и соседом
+                int delta_w = nw - w; // Разница по столбцам между текущей клеткой и соседом
+
+                // Удаляем стены между текущей клеткой и соседом в зависимости от направления
+                if (delta_h == 1) { // Сосед находится снизу
+                    cells[h][w].is_down = false;
+                    cells[nh][nw].is_up = false;
+                } else if (delta_w == 1) { // Сосед находится справа
+                    cells[h][w].is_right = false;
+                    cells[nh][nw].is_left = false;
+                } else if (delta_h == -1) { // Сосед находится сверху
+                    cells[h][w].is_up = false;
+                    cells[nh][nw].is_down = false;
+                } else if (delta_w == -1) { // Сосед находится слева
+                    cells[h][w].is_left = false;
+                    cells[nh][nw].is_right = false;
+                }
+            }
+        }
+    }
 }
 
 sf::Texture Board::bg_tex, Board::border_tex;
