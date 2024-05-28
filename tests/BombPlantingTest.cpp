@@ -87,7 +87,7 @@ TEST_F(BombPlantingTest, IgnorePlantingWhenActivated) {
 }
 
 // Тест №5: Проверка корректного обновления plant_duration при не завершенной установке бомбы (позитивный)
-TEST_F(BombPlantingTest, PlantDurationUpdateWhenNotCompleted) {
+TEST_F(BombPlantingTest, DropPlanting) {
     // Устанавливаем бомбу на начальную позицию в начальное время
     bomb.planting(initial_pos, initial_time);
 
@@ -101,4 +101,35 @@ TEST_F(BombPlantingTest, PlantDurationUpdateWhenNotCompleted) {
     auto plant_info = bomb.get_plant_info();
     ASSERT_EQ(plant_info.first, 500); // Проверяем, что plant_duration = 500 миллисекунд
     ASSERT_LT(plant_info.first, plant_info.second); // Проверяем, что plant_duration < planting_time
+}
+
+// Тест №6: Проверка прерывания установки бомбы
+TEST_F(BombPlantingTest, PlantDurationUpdateWhenNotCompleted) {
+    // Устанавливаем бомбу на начальную позицию в начальное время
+    bomb.planting(initial_pos, initial_time);
+
+    // Время через 1999 миллисекунд после начального, проверяем что установка не завершена
+    __int64_t partial_time = initial_time + 1999; // секунда до установки
+    bomb.planting(initial_pos, partial_time);
+
+    // Проверяем, что бомба не активирована
+    ASSERT_FALSE(bomb.is_activate());
+
+    // сбрасываем установку бомбы
+    bomb.drop_planting();
+
+    // Проверяем, что бомба не активирована
+    ASSERT_FALSE(bomb.is_activate());
+
+    // проходит очень много времени, прежде чем начнется новая установка бомбы
+    partial_time += 50000;
+
+    // начинаем снова установку бомбы
+    bomb.planting(initial_pos, partial_time);
+
+    // Проверяем, что бомба не активирована
+    ASSERT_FALSE(bomb.is_activate());
+
+    auto plant_info = bomb.get_plant_info();
+    ASSERT_EQ(plant_info.first, 0); // Проверяем, что plant_duration = 0 миллисекунд, так как мы только начали установку
 }

@@ -1,24 +1,21 @@
 name: CI/CD GitHub Actions
 on: [push]
 jobs:
-  sonarcloud-check:
+    gtest-tests:
     runs-on: ubuntu-latest
-    env:
-      SONAR_SCANNER_VERSION: 4.6.1.2450 # Find the latest version in the "Linux" link on this page:
-                                        # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
-      SONAR_SERVER_URL: "https://sonarcloud.io"
-      BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin' # See 'Supported distributions' for available options
-          java-version: '17'
-      - run: git submodule init
-      - run: git submodule update
-      - run: sudo apt-get update -y && sudo apt-get install -y libsfml-dev libgtest-dev
+
+      - name: Download dependencies
+        run: |
+          git submodule init
+          git submodule update
+          pip install --user cpp-coveralls
+          sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
+
       - name: Build googletest
         run: |
           cd tests/external/googletest
@@ -26,68 +23,29 @@ jobs:
           cd build
           cmake ..
           make
-      - name: Set up Python 3.8 for gcovr
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.8
-      - name: install gcovr 5.0
-        run: |
-          pip install gcovr==5.0 # 5.1 is not supported
-      - name: Install sonar-scanner and build-wrapper
-        uses: SonarSource/sonarcloud-github-c-cpp@v2
-      - name: Run build-wrapper
-        run: |
-          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make
-      - name: Run tests to generate coverage statistics
+
+      - name: Run tests
         run: |
           cd tests
-          make test
-      - name: Collect coverage into one XML report
+          make coverage
+
+      - name: Send coverage data to Coveralls
         run: |
-          gcovr --sonarqube > coverage.xml
-      - name: Run sonar-scanner
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Put the name of your token here
-        run: |
-          sonar-scanner \
-            --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
-            --define sonar.coverageReportPaths=coverage.xml
-  # gtest-tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v2
-  #       with:
-  #         fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+          coveralls --gcov-options '\-lp' --root .. --build-root . -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
 
-  #     - name: Download dependencies
-  #       run: |
-  #         git submodule init
-  #         git submodule update
-  #         pip install --user cpp-coveralls
-  #         pip install gcovr
-  #         sudo npm install -g coveralls
-  #         sudo apt-get update -y && sudo apt-get install -y libsfml-dev
+  sonarcloud:
+    runs-on: ubuntu-latest
 
-  #     - name: Build googletest
-  #       run: |
-  #         cd tests/external/googletest
-  #         mkdir -p build
-  #         cd build
-  #         cmake ..
-  #         make
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-  #     - name: Run tests
-  #       run: |
-  #         cd tests
-  #         make coverage
-
-  #     - name: Generate coverage report
-  #       run: |
-  #         cd tests
-  #         gcovr --exclude '.*external.*' -r . -o coverage.info
-
-  #     - name: Send coverage data to Coveralls
-  #       run: |
-  #         coveralls -t ${{ secrets.coveralls_repo_token }} --root .
+      - name: Set up SonarCloud
+        uses: sonarsource/sonarcloud-github-action@v1
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          organization: "georgiizaharov"
+          project-key: "GeorgiiZaharov_Project42"
+          project-name: "Project42"
+          # Добавляем параметр, чтобы пропустить анализ покрытия
+          extra-arguments: -Dsonar.coverage.exclusions='**'

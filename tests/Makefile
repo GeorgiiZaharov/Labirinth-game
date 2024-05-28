@@ -26,11 +26,11 @@ $(TARGET): $(OBJS) $(TEST_OBJS)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@ ./external/googletest/build/lib/libgtest.a ./external/googletest/build/lib/libgtest_main.a 
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
 
 $(BUILDDIR)/%.o: $(TESTDIR)/%.cpp
 	@mkdir -p $(BUILDDIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@ ./external/googletest/build/lib/libgtest.a ./external/googletest/build/lib/libgtest_main.a 
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(BUILDDIR) $(BINDIR) $(TARGET) *.gcda *.gcno *.gcov coverage.info out
@@ -40,16 +40,15 @@ test: $(TARGET)
 
 coverage: $(TARGET)
 	./$(TARGET)
-	lcov --capture --directory . --output-file coverage.info
+	lcov --capture --directory ./build --output-file coverage.info
 	lcov --remove coverage.info '/usr/*' --output-file coverage.info
 	lcov --remove coverage.info '/external/*' --output-file coverage.info
-	genhtml coverage.info --output-directory out
+	lcov --remove coverage.info '/tests/*' --output-file coverage.info
+
+	lcov --list coverage.info
 
 coveralls: coverage
-	lcov --list coverage.info
-	cat coverage.info
-	coveralls -t zvmMgms0er7IPOhnNrF3jaBzeVDIJbHFy --root . -E ".*external.*" -E ".*tests.*" -i out/coverage.info
-	cat coverage.info | cpp-coveralls --verbose --repo-token zvmMgms0er7IPOhnNrF3jaBzeVDIJbHFy -E ".*external.*" -E ".*tests.*" -i out/coverage.info
+	coveralls --gcov-options '\-lp' --root .. --build-root . -E ".*external.*" -E ".*tests.*" -t zvmMgms0er7IPOhnNrF3jaBzeVDIJbHFy 
 
 
 .PHONY: all clean
