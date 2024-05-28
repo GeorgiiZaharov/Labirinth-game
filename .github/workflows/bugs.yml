@@ -31,8 +31,6 @@ jobs:
           cd build
           cmake ..
           make
-          export CPLUS_INCLUDE_PATH="/usr/local/include:$CPLUS_INCLUDE_PATH"
-
       - name: Run build-wrapper
         run: |
           cd tests

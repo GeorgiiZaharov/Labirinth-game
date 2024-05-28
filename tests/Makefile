@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -fprofile-arcs -ftest-coverage
+CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -I./external/googletest/googletest/include
 LIBS = -lsfml-graphics -pthread
 
 # Directories
