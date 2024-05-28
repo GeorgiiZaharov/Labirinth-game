@@ -31,41 +31,40 @@ jobs:
           coveralls --gcov-options '\-lp' --root .. --build-root . -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
 
   sonarcloud:
-    jobs:
-      runs-on: ubuntu-latest
-      steps:
+    runs-on: ubuntu-latest
+    steps:
+      env:
+        BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
+      
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Install sonar-scanner and build-wrapper
+        uses: SonarSource/sonarcloud-github-c-cpp@v2
+      - name: Download dependencies
+        run: |
+          git submodule init
+          git submodule update
+          pip install --user cpp-coveralls
+          sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
+
+      - name: Build googletest
+        run: |
+          cd tests/external/googletest
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+          export CPLUS_INCLUDE_PATH="/usr/local/include:$CPLUS_INCLUDE_PATH"
+
+      - name: Run build-wrapper
+        run: |
+          cd tests
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make
+      - name: Run sonar-scanner
         env:
-          BUILD_WRAPPER_OUT_DIR: build_wrapper_output_directory # Directory where build-wrapper output will be placed
-        
-        - name: Checkout repository
-          uses: actions/checkout@v3
-          with:
-            fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-        - name: Install sonar-scanner and build-wrapper
-          uses: SonarSource/sonarcloud-github-c-cpp@v2
-        - name: Download dependencies
-          run: |
-            git submodule init
-            git submodule update
-            pip install --user cpp-coveralls
-            sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
-
-        - name: Build googletest
-          run: |
-            cd tests/external/googletest
-            mkdir -p build
-            cd build
-            cmake ..
-            make
-            export CPLUS_INCLUDE_PATH="/usr/local/include:$CPLUS_INCLUDE_PATH"
-
-        - name: Run build-wrapper
-          run: |
-            cd tests
-            build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make
-        - name: Run sonar-scanner
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          run: |
-            sonar-scanner --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
