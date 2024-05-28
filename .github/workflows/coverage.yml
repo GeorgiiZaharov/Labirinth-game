@@ -25,15 +25,11 @@ jobs:
           make
           export CPLUS_INCLUDE_PATH="/usr/local/include:$CPLUS_INCLUDE_PATH"
 
-      - name: Run tests
+      - name: Run tests and send data to Coveralls
         run: |
           cd tests
           make coverage
-
-      - name: Send coverage data to Coveralls
-        run: |
-          cd tests
-          coveralls --gcov-options '\-lp' --root .. -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
+          coveralls --gcov-options '\-lp' --root .. --build build -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
 
   # sonarcloud:
   #   jobs:
