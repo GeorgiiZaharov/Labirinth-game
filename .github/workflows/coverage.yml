@@ -1,7 +1,7 @@
 name: CI/CD GitHub Actions
 on: [push]
 jobs:
-    gtest-tests:
+  gtest-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -32,7 +32,7 @@ jobs:
       - name: Send coverage data to Coveralls
         run: |
           coveralls --gcov-options '\-lp' --root .. --build-root . -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
-
+        
   sonarcloud:
     runs-on: ubuntu-latest
 
