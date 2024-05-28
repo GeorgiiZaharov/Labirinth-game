@@ -48,7 +48,7 @@ coverage: $(TARGET)
 	lcov --list coverage.info
 
 coveralls: coverage
-	coveralls --gcov-options '\-lp' --root .. --build-root . -E ".*external.*" -E ".*tests.*" -t zvmMgms0er7IPOhnNrF3jaBzeVDIJbHFy 
+	coveralls --gcov-options '\-lp' --root .. -E ".*external.*" -E ".*tests.*" -t zvmMgms0er7IPOhnNrF3jaBzeVDIJbHFy 
 
 
 .PHONY: all clean

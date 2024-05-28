@@ -3,9 +3,9 @@ SF:/home/georgii/Projects/Labs/Project42/BoardLogic.cpp
 FN:3,_ZN10BoardLogic3dfsEii
 FN:27,_ZNK10BoardLogic9navigatorERKN2sf7Vector2IiEES4_i
 FN:75,_ZNK10BoardLogic12is_go_abroadEii
-FNDA:3,_ZNK10BoardLogic9navigatorERKN2sf7Vector2IiEES4_i
-FNDA:443,_ZNK10BoardLogic12is_go_abroadEii
 FNDA:51,_ZN10BoardLogic3dfsEii
+FNDA:443,_ZNK10BoardLogic12is_go_abroadEii
+FNDA:3,_ZNK10BoardLogic9navigatorERKN2sf7Vector2IiEES4_i
 FNF:3
 FNH:3
 DA:3,51
@@ -68,12 +68,12 @@ FN:34,_ZN9BombLogic10deactivateEv
 FN:39,_ZNK9BombLogic11is_activateEv
 FN:44,_ZNK9BombLogic14get_plant_infoEv
 FN:49,_ZNK9BombLogic7get_posEv
-FNDA:17,_ZN9BombLogic8plantingERKN2sf4RectIfEEl
+FNDA:1,_ZNK9BombLogic7get_posEv
 FNDA:1,_ZN9BombLogic13drop_plantingEv
-FNDA:2,_ZNK9BombLogic14get_plant_infoEv
 FNDA:1,_ZN9BombLogic10deactivateEv
 FNDA:13,_ZNK9BombLogic11is_activateEv
-FNDA:1,_ZNK9BombLogic7get_posEv
+FNDA:17,_ZN9BombLogic8plantingERKN2sf4RectIfEEl
+FNDA:2,_ZNK9BombLogic14get_plant_infoEv
 FNF:6
 FNH:6
 DA:2,17
