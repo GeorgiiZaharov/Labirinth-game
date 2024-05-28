@@ -29,7 +29,7 @@ jobs:
         run: |
           cd tests
           make coverage
-          coveralls --gcov-options '\-lp' --root .. --build build -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
+          coveralls --gcov-options '\-lp' --root .. -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
 
   # sonarcloud:
   #   jobs:
