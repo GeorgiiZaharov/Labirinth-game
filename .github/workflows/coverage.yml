@@ -32,6 +32,7 @@ jobs:
 
       - name: Send coverage data to Coveralls
         run: |
+          cd tests
           coveralls --gcov-options '\-lp' --root .. -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
 
   # sonarcloud:
