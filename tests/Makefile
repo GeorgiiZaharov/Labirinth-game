@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -I/usr/local/include -I./external/googletest/googletest/include
+CXXFLAGS = -std=c++17 -fprofile-arcs -ftest-coverage -Wall -I/usr/local/include -I./external/googletest/googletest/include
 LIBS = -lsfml-graphics -pthread
 
 # Directories
@@ -42,8 +42,8 @@ coverage: $(TARGET)
 	./$(TARGET)
 	lcov --capture --directory ./build --output-file coverage.info
 	lcov --remove coverage.info '/usr/*' --output-file coverage.info
-	lcov --remove coverage.info '/external/*' --output-file coverage.info
-	lcov --remove coverage.info '/tests/*' --output-file coverage.info
+	lcov --remove coverage.info '*/external/*' --output-file coverage.info
+	lcov --remove coverage.info '*/tests/*' --output-file coverage.info
 
 	lcov --list coverage.info
 
