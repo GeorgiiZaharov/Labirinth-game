@@ -28,7 +28,7 @@ jobs:
         run: |
           cd tests
           make coverage
-          coveralls --gcov-options '\-lp' --root .. --build-root . -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
+          coveralls --root .. --build-root . -E ".*external.*" -E ".*tests.*" -t ${{ secrets.coveralls_repo_token }}
 
   sonarcloud-check:
     runs-on: ubuntu-latest

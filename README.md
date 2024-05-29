@@ -1,3 +1,7 @@
+[![Actions](https://github.com/GeorgiiZaharov/Project42/actions/workflows/coverage.yml)]
+[![Coverage Status](https://coveralls.io/repos/github/GeorgiiZaharov/Project42/badge.svg?branch=main)](https://coveralls.io/github/GeorgiiZaharov/Project42?branch=main)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=GeorgiiZaharov_Project42&metric=bugs)](https://sonarcloud.io/summary/new_code?id=GeorgiiZaharov_Project42)
+
 # Функциональные возможности игры
 
 ## Управление персонажем
