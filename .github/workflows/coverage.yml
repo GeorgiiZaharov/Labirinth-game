@@ -51,6 +51,14 @@ jobs:
           git submodule update
           sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
 
+      - name: Build googletest
+        run: |
+          cd tests/external/googletest
+          mkdir -p build
+          cd build
+          cmake ..
+          make
+
       - name: Set up Python 3.8 for gcovr
         uses: actions/setup-python@v4
         with:
