@@ -30,8 +30,8 @@ void Board::build(void)
 	cells.clear();
 
 	// в соответствии с размером поля вычисляем размеры ячейки
-	cell_w = pos.width / n;
-	cell_h = pos.height / m; 
+	cell_w = pos.width / static_cast<float>(n);
+	cell_h = pos.height / static_cast<float>(m); 
 
 	// в соответствии с размером заполняем cells объектами cell
 	for (std::size_t i = 0; i < m; ++i){
@@ -224,7 +224,7 @@ sf::Vector2i Board::calc_pos_on_board(const sf::FloatRect& obj_pos, const sf::Ve
 
 float Board::get_people_size(void) const
 {
-	return std::min(cell_w, cell_h) * 1.0f / 4;
+	return std::min(cell_w, cell_h) * 1.0f / 3;
 }
 
 sf::Vector2f Board::get_cell_size(void) const
