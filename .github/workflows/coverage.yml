@@ -45,12 +45,37 @@ jobs:
         with:
           distribution: 'temurin' # See 'Supported distributions' for available options
           java-version: '17'
+      - name: Download dependencies
+        run: |
+          git submodule init
+          git submodule update
+          sudo apt-get update -y && sudo apt-get install -y libsfml-dev lcov
+
+      - name: Set up Python 3.8 for gcovr
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: install gcovr 5.0
+        run: |
+          pip install gcovr==5.0 # 5.1 is not supported
       - name: Install sonar-scanner and build-wrapper
         uses: SonarSource/sonarcloud-github-c-cpp@v2
-
+      - name: Run build-wrapper
+        run: |
+          build-wrapper-linux-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} make
+      - name: Run tests to generate coverage statistics
+        run: |
+          cd tests
+          make              # компилируем тесты
+          ./bin/test_suite  # запускаем тесты
+      - name: Collect coverage into one XML report
+        run: |
+          gcovr --sonarqube > coverage.xml
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Put the name of your token here
         run: |
-          sonar-scanner
+          sonar-scanner \
+            --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
+            --define sonar.coverageReportPaths=coverage.xml
